@@ -18,11 +18,11 @@ namespace Game.Character.Player.Cam
             //camMaxPos = mainCamera.transform.position.z;
         }
 
-        void Update()
+        void LateUpdate()
         {
             Vector3 goTo = new Vector3(playerBody.position.x, 0, -10);
 
-            transform.position = Vector3.Lerp(transform.position, goTo, camMoveFactor * Time.deltaTime);
+            transform.position = Vector3.MoveTowards(transform.position, goTo, camMoveFactor * Time.deltaTime);
         }
 
         void OnDrawGizmos()

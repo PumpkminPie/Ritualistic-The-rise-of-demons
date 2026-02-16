@@ -1,5 +1,4 @@
-oq acha desse key setup
-
+presset 1
 
 WASD = andar
 apertar duas vezes = dash (WASD)
@@ -16,3 +15,24 @@ usar demon/angel skill = apertar o m3
 bloquear = F
 
 m1/m2 + espaço = combo aéreo
+
+Preset2
+
+oq acha desse key setup
+
+setinhas = andar
+apertar duas vezes/C = dash
+
+tab = trocar de personagem 
+
+shift + setinhas  = trocar de skill
+
+ataque básico = Z
+ataque especial = X
+usar skill = V
+usar demon/angel skill = ctrl
+
+bloquear = F
+
+Z + espaço = combo aéreo
+os controles serão editáveis

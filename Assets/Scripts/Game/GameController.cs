@@ -6,6 +6,8 @@ namespace Game
     {
         public static GameController Instance { get; set; }
 
+        public int currentBindPresset = 0;
+
         void Awake()
         {
             if (Instance == null)

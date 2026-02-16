@@ -31,7 +31,7 @@ namespace Game.Inputs
         {
             input.Enable();
 
-            input.Player.Move.performed += ctx => Move = ctx.ReadValue<Vector2>();
+            //input.Player.Move.performed += ctx => Move = ctx.ReadValue<Vector2>();
         }
     }
 }

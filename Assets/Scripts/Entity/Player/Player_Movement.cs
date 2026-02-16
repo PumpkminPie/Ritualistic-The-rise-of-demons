@@ -1,6 +1,7 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.InputSystem;
 
 namespace Game.Character.Player.Movement
 {
@@ -8,6 +9,8 @@ namespace Game.Character.Player.Movement
     {
         [Header("Basic stats")]
         [SerializeField] float maxSpeed = 1;
+        [SerializeField] bool isRightFacing = true;
+        [SerializeField] bool canMove = true;
 
         [Header("combatRoll")]
         [SerializeField] float rollForce = 1;
@@ -27,6 +30,7 @@ namespace Game.Character.Player.Movement
 
         Rigidbody2D rb;
         PlayerInputHandler inputHandler;
+        PlayerInput playerInput;
         [SerializeField] Animator animator;
 
         void Start()
@@ -34,10 +38,12 @@ namespace Game.Character.Player.Movement
             rb = GetComponent<Rigidbody2D>();
             inputHandler = GetComponent<PlayerInputHandler>();
             //animator = GetComponent<Animator>();
+            playerInput = GetComponent<PlayerInput>();
 
             // event pra quando o input pegar o "double click" direcional
-            inputHandler.OnDoubleTapMove?.AddListener((value) => TryRoll(value));
+            inputHandler.OnRoll?.AddListener((value) => TryRoll(value));
 
+            // Eventos de quando andar e quando parar de andar (mais versatil e menos dependente de referencia)
             OnPlayerWalk?.AddListener(() => animator.SetBool("IsWalking", true));
             OnPlayeStoprWalk?.AddListener(() => animator.SetBool("IsWalking", false));
         }
@@ -45,7 +51,10 @@ namespace Game.Character.Player.Movement
         void Update()
         {
             // pegar input do player (vec2)
-            direction = (inputHandler.Move).normalized;
+            if (canMove)
+                direction = (inputHandler.Move).normalized;
+            else
+                direction = Vector2.zero;
 
             //if (rb.attachedColliderCount == 0)
             velocity = (direction * maxSpeed);
@@ -59,6 +68,12 @@ namespace Game.Character.Player.Movement
             /*else
                 rollTime = Mathf.MoveTowards(rollTime, rollRechargeMaxTime, 0.1f);*/
 
+            canMove = isRolling ? false : true;
+
+            if (inputHandler.Move.x < 0 && !isRightFacing)
+                FlipPlayer(true);
+            else if (inputHandler.Move.x > 0 && isRightFacing)
+                FlipPlayer(false);
         }
         void FixedUpdate()
         {
@@ -95,6 +110,22 @@ namespace Game.Character.Player.Movement
             yield return new WaitForSeconds(rollCooldown);
 
             canRoll = true;
+        }
+
+        public void FlipPlayer(bool _side)
+        {
+            isRightFacing = _side;
+
+            if (_side)
+                transform.rotation = Quaternion.Euler(0, 180f, 0);
+
+            else
+                transform.rotation = Quaternion.Euler(0, 0, 0);
+        }
+
+        public Vector2 GetVelocity()
+        {
+            return velocity;
         }
 
         /*void OnCollisionEnter2D(Collision2D collision)

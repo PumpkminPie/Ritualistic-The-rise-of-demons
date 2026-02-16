@@ -7,11 +7,10 @@ namespace Game.Character.Player
 {
     public class PlayerInputHandler : MonoBehaviour
     {
-        public InputSystem_Actions input;
-
         public Vector2 Move { get; private set; }
         public Vector2 DoubleClickMove { get; private set; }
         public UnityEvent<Vector2> OnDoubleTapMove;
+        public UnityEvent<Vector2> OnRoll;
 
         //public float doubleClickTime = 0.25f;
         public float lastTapTime;
@@ -20,19 +19,41 @@ namespace Game.Character.Player
 
         public float doubleTapThreshold = 0.25f;
 
+        public PlayerInput playerInput;
+
+        InputAction moveAct;
+        InputAction rollAct;
+
         //public Vector2 inputNumber;
         void Awake()
         {
-            input = new InputSystem_Actions();
+            playerInput = GetComponent<PlayerInput>();
         }
 
         void OnEnable()
         {
-            input.Enable();
+            //playerInput.actions.Enable();
 
-            input.Player.Move.performed += OnMove;
-            input.Player.Move.canceled += OnMove;
+            if (GameController.Instance.currentBindPresset == 1)
+                playerInput.SwitchCurrentActionMap("Player_Presset1");
+            
+            else if (GameController.Instance.currentBindPresset == 2)
+                playerInput.SwitchCurrentActionMap("Player_Presset2");
+
+            moveAct = playerInput.actions["Move"];
+            rollAct = playerInput.actions["Roll"];
+
+            moveAct.performed += OnMove;
+            moveAct.canceled += OnMove;
+
+            Debug.Log(playerInput.currentActionMap.name);
         }
+        void OnDisable()
+        {
+            moveAct.performed -= OnMove;
+            moveAct.canceled -= OnMove;
+        }
+
 
         /*public void MovePerformed(InputAction.CallbackContext context)
         {
@@ -52,6 +73,7 @@ namespace Game.Character.Player
             {
                 CheckDoubleTap(value);
             }
+            Debug.Log(context.control.path);
         }
 
         void CheckDoubleTap(Vector2 dir)
@@ -67,6 +89,7 @@ namespace Game.Character.Player
             {
                 // DOUBLE TAP DETECTADO
                 OnDoubleTapMove?.Invoke(dir);
+                OnRoll?.Invoke(dir);
 
                 //Debug.Log("double tap");
 
