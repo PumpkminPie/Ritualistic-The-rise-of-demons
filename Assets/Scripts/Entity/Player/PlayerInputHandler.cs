@@ -68,7 +68,7 @@ namespace Game.Character.Player
                 // DOUBLE TAP DETECTADO
                 OnDoubleTapMove?.Invoke(dir);
 
-                Debug.Log("double tap");
+                //Debug.Log("double tap");
 
                 lastTapTime = 0f;
                 lastTapDir = Vector2.zero;

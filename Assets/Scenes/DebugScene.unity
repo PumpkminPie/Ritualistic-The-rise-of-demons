@@ -303,7 +303,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Player_CamSystem
   playerBody: {fileID: 1358964576}
-  camMoveFactor: 10
+  camMoveFactor: 0.5
   mainCamera: {fileID: 519420031}
   camMaxPos: {x: 10, y: 7.01, z: -10}
 --- !u!1 &519420028
