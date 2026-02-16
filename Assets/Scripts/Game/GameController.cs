@@ -1,20 +1,21 @@
 using UnityEngine;
 
-public class GameController : MonoBehaviour
+namespace Game
 {
-    public static GameController Instance { get; set; }
-
-    void Awake()
+    public class GameController : MonoBehaviour
     {
-        if (Instance == null)
+        public static GameController Instance { get; set; }
+
+        void Awake()
         {
-            Instance = this;
+            if (Instance == null)
+            {
+                Instance = this;
 
-            DontDestroyOnLoad(Instance);
+                DontDestroyOnLoad(Instance);
+            }
+            else
+                Destroy(gameObject);
         }
-        else
-            Destroy(gameObject);
-
-
     }
 }

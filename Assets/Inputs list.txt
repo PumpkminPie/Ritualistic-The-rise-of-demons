@@ -1,0 +1,18 @@
+oq acha desse key setup
+
+
+WASD = andar
+apertar duas vezes = dash (WASD)
+
+tab = trocar de personagem 
+
+E/Q = trocar de skill
+
+ataque básico = m1
+ataque especial = m2
+usar skill = R
+usar demon/angel skill = apertar o m3
+
+bloquear = F
+
+m1/m2 + espaço = combo aéreo

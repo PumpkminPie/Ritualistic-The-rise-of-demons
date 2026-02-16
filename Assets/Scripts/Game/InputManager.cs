@@ -2,33 +2,36 @@ using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class InputManager : MonoBehaviour
+namespace Game
 {
-    public static InputManager Instance { get; set; }
-    
-    InputSystem_Actions input;
-
-    public Vector2 Move {  get; private set; }
-
-    private void Awake()
+    public class InputManager : MonoBehaviour
     {
-        input = new InputSystem_Actions();
+        public static InputManager Instance { get; set; }
 
-        if (!Instance)
+        InputSystem_Actions input;
+
+        public Vector2 Move { get; private set; }
+
+        private void Awake()
         {
-            Instance = this;
-            //Don
+            input = new InputSystem_Actions();
+
+            if (!Instance)
+            {
+                Instance = this;
+                //Don
+            }
+            else
+            {
+                Destroy(gameObject);
+            }
         }
-        else
+
+        void OnEnable()
         {
-            Destroy(gameObject);
+            input.Enable();
+
+            input.Player.Move.performed += ctx => Move = ctx.ReadValue<Vector2>();
         }
-    }
-
-    void OnEnable()
-    {
-        input.Enable();
-
-        input.Player.Move.performed += ctx => Move = ctx.ReadValue<Vector2>();
     }
 }

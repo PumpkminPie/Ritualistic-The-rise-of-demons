@@ -1,26 +1,34 @@
-using Unity.VisualScripting;
 using UnityEngine;
 
-public class Player_CamSystem : MonoBehaviour
+namespace Game.Character.Player.Cam
 {
-    [SerializeField] Transform playerBody;
-    [SerializeField] float camMoveFactor = 10f;
-
-    [SerializeField] Camera mainCamera;
-    [SerializeField] float mainCamMaxZ;
-
-    private void Start()
+    public class Player_CamSystem : MonoBehaviour
     {
-        if (playerBody == null) 
-            mainCamera = Camera.main;
+        [SerializeField] Transform playerBody;
+        [SerializeField] float camMoveFactor = 10f;
 
-        mainCamMaxZ = mainCamera.transform.position.z;
-    }
+        [SerializeField] Camera mainCamera;
+        [SerializeField] Vector3 camMaxPos;
 
-    void Update()
-    {
-        Vector3 goTo = new Vector3(playerBody.position.x, playerBody.position.y, mainCamMaxZ);
+        private void Start()
+        {
+            if (playerBody == null)
+                mainCamera = Camera.main;
 
-        transform.position = Vector3.Lerp(transform.position, goTo, camMoveFactor * Time.deltaTime);
+            //camMaxPos = mainCamera.transform.position.z;
+        }
+
+        void Update()
+        {
+            Vector3 goTo = new Vector3(playerBody.position.x, 0, -10);
+
+            transform.position = Vector3.Lerp(transform.position, goTo, camMoveFactor * Time.deltaTime);
+        }
+
+        void OnDrawGizmos()
+        {
+            Gizmos.color = new Color(0, 255, 0, 0.1f);
+            Gizmos.DrawWireCube(transform.position, camMaxPos);
+        }
     }
 }
