@@ -1,22 +1,34 @@
+using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class InputManager : MonoBehaviour
 {
     public static InputManager Instance { get; set; }
+    
+    InputSystem_Actions input;
 
-    PlayerInput input;
+    public Vector2 Move {  get; private set; }
 
-    void Awake()
+    private void Awake()
     {
-        input = new PlayerInput();
-    }
+        input = new InputSystem_Actions();
 
+        if (!Instance)
+        {
+            Instance = this;
+            //Don
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
 
     void OnEnable()
     {
-        input.actions.Enable();
+        input.Enable();
 
-        input.actions.FindAction("Movement");
+        input.Player.Move.performed += ctx => Move = ctx.ReadValue<Vector2>();
     }
 }
