@@ -45,8 +45,9 @@ namespace Game.Character.Player
 
             moveAct.performed += OnMove;
             moveAct.canceled += OnMove;
+            rollAct.performed += ctx => OnRoll?.Invoke(Vector2.left);
 
-            Debug.Log(playerInput.currentActionMap.name);
+            //Debug.Log(playerInput.currentActionMap.name);
         }
         void OnDisable()
         {
@@ -73,7 +74,7 @@ namespace Game.Character.Player
             {
                 CheckDoubleTap(value);
             }
-            Debug.Log(context.control.path);
+            //Debug.Log(context.control.path);
         }
 
         void CheckDoubleTap(Vector2 dir)
