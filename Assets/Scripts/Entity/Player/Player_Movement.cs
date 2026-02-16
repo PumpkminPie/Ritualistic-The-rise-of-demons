@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace Game.Character.Player.Movement
 {
@@ -20,25 +21,39 @@ namespace Game.Character.Player.Movement
         [Header("RigidBody (2D)")]
         [SerializeField] Vector2 direction, velocity, rollDirection;
 
+        [Header("Events")]
+        public UnityEvent OnPlayerWalk;
+        public UnityEvent OnPlayeStoprWalk;
+
         Rigidbody2D rb;
         PlayerInputHandler inputHandler;
+        [SerializeField] Animator animator;
 
         void Start()
         {
             rb = GetComponent<Rigidbody2D>();
             inputHandler = GetComponent<PlayerInputHandler>();
+            //animator = GetComponent<Animator>();
 
+            // event pra quando o input pegar o "double click" direcional
             inputHandler.OnDoubleTapMove?.AddListener((value) => TryRoll(value));
+
+            OnPlayerWalk?.AddListener(() => animator.SetBool("IsWalking", true));
+            OnPlayeStoprWalk?.AddListener(() => animator.SetBool("IsWalking", false));
         }
 
         void Update()
         {
+            // pegar input do player (vec2)
             direction = (inputHandler.Move).normalized;
 
             //if (rb.attachedColliderCount == 0)
             velocity = (direction * maxSpeed);
 
-
+            if (velocity.magnitude > 0)
+                OnPlayerWalk?.Invoke();
+            else
+                OnPlayeStoprWalk?.Invoke();
             /*if (isRolling)
                 TryRoll();*/
             /*else
