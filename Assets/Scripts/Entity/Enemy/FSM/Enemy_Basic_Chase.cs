@@ -15,7 +15,7 @@ namespace Game.Character.Enemy.StateMachine.States
 
         public override void Execute(Enemy_Basic_StateMachine enemy)
         {
-            GoTo(enemy, enemy.playerMove.transform, 2f);
+            GoTo(enemy, enemy.playerMove.transform, enemy.infoAsset.maxVel);
         }
 
         public override void Exit(Enemy_Basic_StateMachine enemy)

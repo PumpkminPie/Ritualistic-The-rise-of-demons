@@ -26,7 +26,7 @@ namespace Game.Character.Player.Movement
         [SerializeField] Vector2 direction, velocity, rollDirection;
 
         [Header("Events")]
-        public UnityEvent OnPlayerStartWalk;
+        //public UnityEvent OnPlayerStartWalk;
         public UnityEvent OnPlayerWalk;
         public UnityEvent OnPlayeStopWalk;
 
@@ -68,8 +68,8 @@ namespace Game.Character.Player.Movement
             else
                 OnPlayeStopWalk?.Invoke();
             /*if (isRolling)
-                TryRoll();*/
-            /*else
+                TryRoll();
+            else
                 rollTime = Mathf.MoveTowards(rollTime, rollRechargeMaxTime, 0.1f);*/
 
             canMove = isRolling ? false : true;
@@ -143,7 +143,7 @@ namespace Game.Character.Player.Movement
             return velocity;
         }
 
-        public Vector2 GetDirection()
+        public Vector2 GetFaceDirection()
         {
             var _dir = Vector2.zero;
 

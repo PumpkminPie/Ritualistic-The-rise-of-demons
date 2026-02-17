@@ -10,7 +10,7 @@ namespace Game.Character.Player
     public class PlayerInputHandler : MonoBehaviour
     {
         public Vector2 Move { get; private set; }
-        public Vector2 DoubleClickMove { get; private set; }
+        //public Vector2 DoubleClickMove { get; private set; }
         public UnityEvent<Vector2> OnDoubleTapMove;
         public UnityEvent<Vector2> OnRoll;
         public UnityEvent OnPressMovement;
@@ -18,7 +18,7 @@ namespace Game.Character.Player
         //public float doubleClickTime = 0.25f;
         public float lastTapTime;
         public Vector2 lastTapDir;
-        public bool isDoubleClick;
+        //public bool isDoubleClick;
 
         public float doubleTapThreshold = 0.25f;
 
@@ -53,7 +53,7 @@ namespace Game.Character.Player
             moveAct.canceled    += OnMove;
             moveAct.started     += ctx => OnPressMovement?.Invoke();
 
-            rollAct.performed   += ctx => OnRoll?.Invoke(player.GetDirection());
+            rollAct.performed   += ctx => OnRoll?.Invoke(player.GetFaceDirection());
 
             //Debug.Log(playerInput.currentActionMap.name);
         }

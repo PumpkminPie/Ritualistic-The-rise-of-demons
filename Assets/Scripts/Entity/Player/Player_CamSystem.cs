@@ -8,7 +8,8 @@ namespace Game.Character.Player.Cam
         [SerializeField] float camMoveFactor = 10f;
 
         [SerializeField] Camera mainCamera;
-        [SerializeField] Vector3 camMaxPos;
+        [SerializeField] Vector2 camMaxPos;
+        [SerializeField] bool freezeXAxis, freezeYAxis, freezeZAxis;
 
         private void Start()
         {
@@ -20,9 +21,20 @@ namespace Game.Character.Player.Cam
 
         void LateUpdate()
         {
-            Vector3 goTo = new Vector3(playerBody.position.x, 0, -10);
+            var _x = !freezeXAxis ? playerBody.position.x : camMaxPos.x;
 
-            transform.position = Vector3.MoveTowards(transform.position, goTo, camMoveFactor * Time.deltaTime);
+            var _y = !freezeYAxis ? playerBody.position.y : camMaxPos.y;
+
+            //var _z = !freezeZAxis ? mainCamera.transform.localPosition.z : -10;
+
+            Vector3 goTo = new Vector3(_x, _y, mainCamera.transform.localPosition.z);
+
+            transform.position = Vector3.Lerp(transform.position, goTo, camMoveFactor * Time.deltaTime);
+        }
+
+        public void SetCamMaxPos(Vector2 pos)
+        {
+            camMaxPos = pos;
         }
 
         void OnDrawGizmos()

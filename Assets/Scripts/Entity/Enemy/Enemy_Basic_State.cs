@@ -1,3 +1,4 @@
+using Unity.IntegerTime;
 using UnityEngine;
 
 namespace Game.Character.Enemy.StateMachine.States
@@ -13,7 +14,9 @@ namespace Game.Character.Enemy.StateMachine.States
 
         public void GoTo(Enemy_Basic_StateMachine enemy, Transform target, float vel) 
         {
-            enemy.transform.position = Vector2.MoveTowards(enemy.transform.position, target.position, vel);
+            Vector2 velocity = Vector2.one, currentVel = Vector2.one;
+
+            enemy.transform.position = Vector2.Lerp(enemy.transform.position, target.position, vel * Time.deltaTime);
         }
     }
 }
