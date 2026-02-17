@@ -20,13 +20,15 @@ namespace Game.Character.Player.Movement
         [SerializeField] bool isRolling;
         [SerializeField] bool canRoll;
         //[SerializeField] bool isColliding;
+        //bool wasMoving = false;
 
         [Header("RigidBody (2D)")]
         [SerializeField] Vector2 direction, velocity, rollDirection;
 
         [Header("Events")]
+        public UnityEvent OnPlayerStartWalk;
         public UnityEvent OnPlayerWalk;
-        public UnityEvent OnPlayeStoprWalk;
+        public UnityEvent OnPlayeStopWalk;
 
         Rigidbody2D rb;
         PlayerInputHandler inputHandler;
@@ -40,12 +42,14 @@ namespace Game.Character.Player.Movement
             //animator = GetComponent<Animator>();
             playerInput = GetComponent<PlayerInput>();
 
-            // event pra quando o input pegar o "double click" direcional
+            // event pra quando o input pegar o "double click" direcional OU quando apertar a tecla de rolar (ambos suportados)
             inputHandler.OnRoll?.AddListener((value) => TryRoll(value));
+
+            inputHandler.OnPressMovement?.AddListener(() => animator.SetTrigger("StartWalking"));
 
             // Eventos de quando andar e quando parar de andar (mais versatil e menos dependente de referencia)
             OnPlayerWalk?.AddListener(() => animator.SetBool("IsWalking", true));
-            OnPlayeStoprWalk?.AddListener(() => animator.SetBool("IsWalking", false));
+            OnPlayeStopWalk?.AddListener(() => animator.SetBool("IsWalking", false));
         }
 
         void Update()
@@ -62,7 +66,7 @@ namespace Game.Character.Player.Movement
             if (velocity.magnitude > 0)
                 OnPlayerWalk?.Invoke();
             else
-                OnPlayeStoprWalk?.Invoke();
+                OnPlayeStopWalk?.Invoke();
             /*if (isRolling)
                 TryRoll();*/
             /*else
@@ -72,8 +76,19 @@ namespace Game.Character.Player.Movement
 
             if (inputHandler.Move.x < 0 && !isRightFacing)
                 FlipPlayer(true);
-            else if (inputHandler.Move.x > 0 && isRightFacing)
+            if (inputHandler.Move.x > 0 && isRightFacing)
                 FlipPlayer(false);
+
+            /*bool isMoving = inputHandler.Move != Vector2.zero;
+
+            if (isMoving && !wasMoving)
+            {
+                //Debug.Log("Player começou a andar");
+
+                OnPlayerStartWalk?.Invoke();
+            }
+
+            wasMoving = isMoving;*/
         }
         void FixedUpdate()
         {
@@ -128,13 +143,20 @@ namespace Game.Character.Player.Movement
             return velocity;
         }
 
-        /*void OnCollisionEnter2D(Collision2D collision)
+        public Vector2 GetDirection()
         {
-            isColliding = true;
+            var _dir = Vector2.zero;
+
+            _dir.y += direction.y;
+
+            _dir.y = Mathf.Clamp(_dir.y, -1, 1);
+
+            if (isRightFacing)
+                _dir.x = -1;
+            else
+                _dir.x = 1;
+
+            return _dir;
         }
-        void OnCollisionExit2D(Collision2D collision)
-        {
-            isColliding = false;
-        }*/
     }
 }

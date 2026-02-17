@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Game
+namespace Game.Manegement
 {
     public class GameController : MonoBehaviour
     {

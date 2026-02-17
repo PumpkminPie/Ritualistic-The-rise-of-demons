@@ -10,5 +10,11 @@ namespace Game
         {
             void Attack();
         }
+
+        // Interface para debugs visuais futuros (!debug!)
+        public interface IDebug
+        {
+            string Info();
+        }
     }
 }

@@ -1,4 +1,4 @@
-presset 1
+preset 1
 
 WASD = andar
 apertar duas vezes = dash (WASD)

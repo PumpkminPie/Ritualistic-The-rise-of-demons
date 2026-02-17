@@ -2,6 +2,8 @@ using System;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
+using Game.Manegement;
+using Game.Character.Player.Movement;
 
 namespace Game.Character.Player
 {
@@ -11,6 +13,7 @@ namespace Game.Character.Player
         public Vector2 DoubleClickMove { get; private set; }
         public UnityEvent<Vector2> OnDoubleTapMove;
         public UnityEvent<Vector2> OnRoll;
+        public UnityEvent OnPressMovement;
 
         //public float doubleClickTime = 0.25f;
         public float lastTapTime;
@@ -21,6 +24,8 @@ namespace Game.Character.Player
 
         public PlayerInput playerInput;
 
+        Player_Movement player;
+
         InputAction moveAct;
         InputAction rollAct;
 
@@ -28,6 +33,7 @@ namespace Game.Character.Player
         void Awake()
         {
             playerInput = GetComponent<PlayerInput>();
+            player = GetComponent<Player_Movement>();
         }
 
         void OnEnable()
@@ -43,9 +49,11 @@ namespace Game.Character.Player
             moveAct = playerInput.actions["Move"];
             rollAct = playerInput.actions["Roll"];
 
-            moveAct.performed += OnMove;
-            moveAct.canceled += OnMove;
-            rollAct.performed += ctx => OnRoll?.Invoke(Vector2.left);
+            moveAct.performed   += OnMove;
+            moveAct.canceled    += OnMove;
+            moveAct.started     += ctx => OnPressMovement?.Invoke();
+
+            rollAct.performed   += ctx => OnRoll?.Invoke(player.GetDirection());
 
             //Debug.Log(playerInput.currentActionMap.name);
         }

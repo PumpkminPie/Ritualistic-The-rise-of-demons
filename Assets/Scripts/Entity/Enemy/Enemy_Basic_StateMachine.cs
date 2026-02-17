@@ -6,7 +6,7 @@ namespace Game.Character.Enemy.StateMachine
 {
     public class Enemy_Basic_StateMachine : MonoBehaviour
     {
-        public Enemy_Basic_States curentState;
+        public Enemy_Basic_States currentState;
 
         public Enemy_Basic_States idleState;
         public Enemy_Basic_States chaseState;
@@ -17,6 +17,9 @@ namespace Game.Character.Enemy.StateMachine
         private void Awake()
         {
             chaseState = new Enemy_Basic_Chase(this);
+            idleState = new Enemy_Basic_Idle(this);
+
+            currentState = idleState;
         }
         private void Start()
         {
@@ -25,16 +28,16 @@ namespace Game.Character.Enemy.StateMachine
 
         private void Update()
         {
-            curentState.Execute(this);
+            currentState.Execute(this);
         }
 
         public void ChangeState(Enemy_Basic_States state)
         {
-            if (curentState == state) return;
+            if (currentState == state) return;
             
-            curentState.Exit(this);
-            curentState = state;
-            curentState.Enter(this);
+            currentState.Exit(this);
+            currentState = state;
+            currentState.Enter(this);
         }
     }
 }
