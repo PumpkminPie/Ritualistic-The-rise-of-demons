@@ -1,9 +1,9 @@
 using UnityEngine;
-using Game.Character.Enemy.StateMachine.States;
-using Game.Character.Player.Movement;
-using Game.Character.Enemy.StateMachine.Sensor;
+using Game.Entity.Enemy.StateMachine.States;
+using Game.Entity.Player.Movement;
+using Game.Entity.Enemy.StateMachine.Sensor;
 
-namespace Game.Character.Enemy.StateMachine
+namespace Game.Entity.Enemy.StateMachine
 {
     public class Enemy_Basic_StateMachine : MonoBehaviour
     {

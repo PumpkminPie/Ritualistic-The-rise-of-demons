@@ -1,8 +1,8 @@
-using Game.Character.Enemy.StateMachine;
-using Game.Character.Enemy.StateMachine.States;
+using Game.Entity.Enemy.StateMachine;
+using Game.Entity.Enemy.StateMachine.States;
 using UnityEngine;
 
-namespace Game.Character.Enemy.StateMachine.States
+namespace Game.Entity.Enemy.StateMachine.States
 {
     public class Enemy_Basic_Chase : Enemy_Basic_States
     {

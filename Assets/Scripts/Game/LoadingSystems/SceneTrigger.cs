@@ -2,14 +2,17 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 
-public class SceneTrigger : MonoBehaviour
+namespace Game.Manegement.Scene
 {
-    public static UnityEvent OnSceneLoad;
-    
-    public void ChangeScene(string sceneName)
+    public class SceneTrigger : MonoBehaviour
     {
-        LoadingData.sceneToLoad = sceneName;
+        public static UnityEvent OnSceneLoad;
 
-        SceneManager.LoadScene("Loading");
+        public void ChangeScene(string sceneName)
+        {
+            LoadingData.sceneToLoad = sceneName;
+
+            SceneManager.LoadScene("Loading");
+        }
     }
 }

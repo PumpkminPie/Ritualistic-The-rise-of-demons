@@ -1,5 +1,5 @@
 using UnityEngine;
-namespace Game.Character.Health
+namespace Game.Entity.Health
 {
     public class Entity_HealthSystem : MonoBehaviour
     {

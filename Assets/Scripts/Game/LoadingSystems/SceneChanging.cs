@@ -1,13 +1,16 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class SceneChanging : MonoBehaviour
+namespace Game.Manegement.Scene
 {
-    void Start()
+    public class SceneChanging : MonoBehaviour
     {
-        var _loading = SceneManager.LoadSceneAsync(LoadingData.sceneToLoad);
+        void Start()
+        {
+            var _loading = SceneManager.LoadSceneAsync(LoadingData.sceneToLoad);
 
-        if (_loading.isDone)
-            SceneTrigger.OnSceneLoad?.Invoke();
+            if (_loading.isDone)
+                SceneTrigger.OnSceneLoad?.Invoke();
+        }
     }
 }

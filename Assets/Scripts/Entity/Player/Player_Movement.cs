@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
 
-namespace Game.Character.Player.Movement
+namespace Game.Entity.Player.Movement
 {
     public class Player_Movement : MonoBehaviour
     {
@@ -99,7 +99,7 @@ namespace Game.Character.Player.Movement
         {
             if (isRolling || !canRoll) return;
 
-            //if (direction == Vector2.zero)
+            //if (mouseDirection == Vector2.zero)
             rollDirection = dir;
 
             StartCoroutine(IRoll(rollDirection));

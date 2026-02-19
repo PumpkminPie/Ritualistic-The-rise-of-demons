@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.Events;
 
-namespace Game.Character.Enemy.StateMachine.Sensor
+namespace Game.Entity.Enemy.StateMachine.Sensor
 {
     public class Enemy_Basic_Sensor : MonoBehaviour
     {

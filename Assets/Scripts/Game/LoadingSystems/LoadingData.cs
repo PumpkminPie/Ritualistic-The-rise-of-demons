@@ -1,4 +1,7 @@
-public static class LoadingData
+namespace Game.Manegement.Scene
 {
-    public static string sceneToLoad;
+    public static class LoadingData
+    {
+        public static string sceneToLoad;
+    }
 }

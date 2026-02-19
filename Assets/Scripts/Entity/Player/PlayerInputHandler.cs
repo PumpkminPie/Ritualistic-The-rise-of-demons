@@ -3,9 +3,9 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
 using Game.Manegement;
-using Game.Character.Player.Movement;
+using Game.Entity.Player.Movement;
 
-namespace Game.Character.Player
+namespace Game.Entity.Player
 {
     public class PlayerInputHandler : MonoBehaviour
     {

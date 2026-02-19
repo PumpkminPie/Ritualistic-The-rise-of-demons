@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Game.Character.Player.Cam
+namespace Game.Entity.Player.Cam
 {
     public class Player_CamSystem : MonoBehaviour
     {

@@ -1,7 +1,7 @@
 using Unity.IntegerTime;
 using UnityEngine;
 
-namespace Game.Character.Enemy.StateMachine.States
+namespace Game.Entity.Enemy.StateMachine.States
 {
     public abstract class Enemy_Basic_States
     {
