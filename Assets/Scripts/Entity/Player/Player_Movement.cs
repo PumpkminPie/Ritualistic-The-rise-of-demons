@@ -8,9 +8,11 @@ namespace Game.Entity.Player.Movement
     public class Player_Movement : MonoBehaviour
     {
         [Header("Basic stats")]
-        [SerializeField] float maxSpeed = 1;
+        [SerializeField] float maxWalkSpeed = 1;
+        [SerializeField] float maxSprintSpeed = 2;
         [SerializeField] bool isRightFacing = true;
         [SerializeField] bool canMove = true;
+        [SerializeField] float currentMaxSpeed;
 
         [Header("combatRoll")]
         [SerializeField] float rollForce = 1;
@@ -29,6 +31,8 @@ namespace Game.Entity.Player.Movement
         //public UnityEvent OnPlayerStartWalk;
         public UnityEvent OnPlayerWalk;
         public UnityEvent OnPlayeStopWalk;
+        public UnityEvent OnPlayerRun;
+        public UnityEvent OnPlayeStopRun;
 
         Rigidbody2D rb;
         PlayerInputHandler inputHandler;
@@ -61,12 +65,25 @@ namespace Game.Entity.Player.Movement
                 direction = Vector2.zero;
 
             //if (rb.attachedColliderCount == 0)
-            velocity = (direction * maxSpeed);
+            velocity = (direction * currentMaxSpeed);
 
-            if (velocity.magnitude > 0)
-                OnPlayerWalk?.Invoke();
+            if (!inputHandler.Sprint)
+            {
+                if (velocity.magnitude > 0)
+                    OnPlayerWalk?.Invoke();
+                else
+                    OnPlayeStopWalk?.Invoke();
+            }
             else
-                OnPlayeStopWalk?.Invoke();
+            {
+                if (velocity.magnitude > 0)
+                    OnPlayerRun?.Invoke();
+                else
+                    OnPlayeStopRun?.Invoke();
+            }
+
+            Sprint();
+
             /*if (isRolling)
                 TryRoll();
             else
@@ -103,6 +120,11 @@ namespace Game.Entity.Player.Movement
             rollDirection = dir;
 
             StartCoroutine(IRoll(rollDirection));
+        }
+
+        public void Sprint()
+        {
+            currentMaxSpeed = inputHandler.Sprint ? maxSprintSpeed : maxWalkSpeed;
         }
 
         IEnumerator IRoll(Vector2 dir)

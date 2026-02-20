@@ -10,6 +10,7 @@ namespace Game.Entity.Player
     public class PlayerInputHandler : MonoBehaviour
     {
         public Vector2 Move { get; private set; }
+        public bool Sprint {  get; private set; }
         //public Vector2 DoubleClickMove { get; private set; }
         public UnityEvent<Vector2> OnDoubleTapMove;
         public UnityEvent<Vector2> OnRoll;
@@ -28,6 +29,7 @@ namespace Game.Entity.Player
 
         InputAction moveAct;
         InputAction rollAct;
+        InputAction sprintAct;
 
         //public Vector2 inputNumber;
         void Awake()
@@ -46,12 +48,16 @@ namespace Game.Entity.Player
             else if (GameController.Instance.currentBindPresset == 2)
                 playerInput.SwitchCurrentActionMap("Player_Presset2");
 
-            moveAct = playerInput.actions["Move"];
-            rollAct = playerInput.actions["Roll"];
+            moveAct     = playerInput.actions["Move"];
+            rollAct     = playerInput.actions["Roll"];
+            sprintAct   = playerInput.actions["Sprint"];
 
             moveAct.performed   += OnMove;
             moveAct.canceled    += OnMove;
             moveAct.started     += ctx => OnPressMovement?.Invoke();
+
+            sprintAct.performed += OnSprint;
+            sprintAct.canceled += OnSprint;
 
             rollAct.performed   += ctx => OnRoll?.Invoke(player.GetFaceDirection());
 
@@ -61,17 +67,19 @@ namespace Game.Entity.Player
         {
             moveAct.performed -= OnMove;
             moveAct.canceled -= OnMove;
+
+            sprintAct.performed -= OnSprint;
+            sprintAct.canceled -= OnSprint;
+
+            rollAct.performed -= ctx => OnRoll?.Invoke(player.GetFaceDirection());
         }
 
 
-        /*public void MovePerformed(InputAction.CallbackContext context)
+        public void OnSprint(InputAction.CallbackContext context)
         {
-            Move = context.ReadValue<Vector2>();
+            Sprint = !Sprint;
         }
-        public void MoveCanceled(InputAction.CallbackContext context)
-        {
-            Move = Vector2.zero;
-        }*/
+
         public void OnMove(InputAction.CallbackContext context)
         {
             Vector2 value = context.ReadValue<Vector2>();
