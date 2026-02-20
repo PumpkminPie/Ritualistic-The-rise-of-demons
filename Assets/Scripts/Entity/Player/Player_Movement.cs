@@ -25,7 +25,9 @@ namespace Game.Entity.Player.Movement
         //bool wasMoving = false;
 
         [Header("RigidBody (2D)")]
-        [SerializeField] Vector2 direction, velocity, rollDirection;
+        [SerializeField] Vector2 direction;
+        [SerializeField] Vector2 velocity;
+        [SerializeField] Vector2 rollDirection;
 
         [Header("Events")]
         //public UnityEvent OnPlayerStartWalk;
@@ -58,7 +60,7 @@ namespace Game.Entity.Player.Movement
 
         void Update()
         {
-            // pegar input do player (vec2)
+            // pegar input do playerTrans (vec2)
             if (canMove)
                 direction = (inputHandler.Move).normalized;
             else

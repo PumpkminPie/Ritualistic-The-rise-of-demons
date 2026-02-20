@@ -1305,7 +1305,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Player_Movement
   maxWalkSpeed: 7.5
-  maxSprintSpeed: 14
+  maxSprintSpeed: 12.5
   isRightFacing: 0
   canMove: 1
   currentMaxSpeed: 0
@@ -1546,11 +1546,11 @@ MonoBehaviour:
   - m_PersistentCalls:
       m_Calls: []
     m_ActionId: f3a79c9e-23ac-497f-b0c6-18c6916e461c
-    m_ActionName: 'Player_Presset1/MousePos[/Mouse/position]'
+    m_ActionName: 'Player_Presset1/MousePos[/Mouse/delta]'
   - m_PersistentCalls:
       m_Calls: []
     m_ActionId: 6b1c2c05-81fe-44b3-9099-d3647d536a7c
-    m_ActionName: 'Player_Presset2/MousePos[/Mouse/position]'
+    m_ActionName: 'Player_Presset2/MousePos[/Mouse/delta]'
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: Keyboard&Mouse
   m_DefaultActionMap: 
@@ -1657,6 +1657,63 @@ Transform:
   - {fileID: 196154791}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &2019048710
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 7320067500060439849, guid: 9c65d3f8d85a3cf4c90ab51c3f88729b, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -3.4422152
+      objectReference: {fileID: 0}
+    - target: {fileID: 7320067500060439849, guid: 9c65d3f8d85a3cf4c90ab51c3f88729b, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -1.0793468
+      objectReference: {fileID: 0}
+    - target: {fileID: 7320067500060439849, guid: 9c65d3f8d85a3cf4c90ab51c3f88729b, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7320067500060439849, guid: 9c65d3f8d85a3cf4c90ab51c3f88729b, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7320067500060439849, guid: 9c65d3f8d85a3cf4c90ab51c3f88729b, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7320067500060439849, guid: 9c65d3f8d85a3cf4c90ab51c3f88729b, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7320067500060439849, guid: 9c65d3f8d85a3cf4c90ab51c3f88729b, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7320067500060439849, guid: 9c65d3f8d85a3cf4c90ab51c3f88729b, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7320067500060439849, guid: 9c65d3f8d85a3cf4c90ab51c3f88729b, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7320067500060439849, guid: 9c65d3f8d85a3cf4c90ab51c3f88729b, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8314527616033804195, guid: 9c65d3f8d85a3cf4c90ab51c3f88729b, type: 3}
+      propertyPath: m_Name
+      value: fireball
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 9c65d3f8d85a3cf4c90ab51c3f88729b, type: 3}
 --- !u!1001 &6288343409188822920
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1727,3 +1784,4 @@ SceneRoots:
   - {fileID: 979969771}
   - {fileID: 1136368173}
   - {fileID: 6288343409188822920}
+  - {fileID: 2019048710}

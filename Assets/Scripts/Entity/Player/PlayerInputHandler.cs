@@ -10,6 +10,7 @@ namespace Game.Entity.Player
     public class PlayerInputHandler : MonoBehaviour
     {
         public Vector2 Move { get; private set; }
+        public Vector2 MousePos { get; private set; }
         public bool Sprint {  get; private set; }
         //public Vector2 DoubleClickMove { get; private set; }
         public UnityEvent<Vector2> OnDoubleTapMove;
@@ -30,6 +31,7 @@ namespace Game.Entity.Player
         InputAction moveAct;
         InputAction rollAct;
         InputAction sprintAct;
+        InputAction mouseAct;
 
         //public Vector2 inputNumber;
         void Awake()
@@ -51,10 +53,12 @@ namespace Game.Entity.Player
             moveAct     = playerInput.actions["Move"];
             rollAct     = playerInput.actions["Roll"];
             sprintAct   = playerInput.actions["Sprint"];
+            mouseAct    = playerInput.actions["MousePos"];
 
             moveAct.performed   += OnMove;
             moveAct.canceled    += OnMove;
             moveAct.started     += ctx => OnPressMovement?.Invoke();
+            mouseAct.performed  += ctx => MousePos = ctx.ReadValue<Vector2>();
 
             sprintAct.performed += OnSprint;
             sprintAct.canceled += OnSprint;
@@ -72,6 +76,7 @@ namespace Game.Entity.Player
             sprintAct.canceled -= OnSprint;
 
             rollAct.performed -= ctx => OnRoll?.Invoke(player.GetFaceDirection());
+            mouseAct.performed -= ctx => MousePos = ctx.ReadValue<Vector2>();
         }
 
 
