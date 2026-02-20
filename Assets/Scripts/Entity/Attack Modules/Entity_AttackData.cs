@@ -5,10 +5,11 @@ using UnityEngine.InputSystem;
 
 namespace Game.Entity.Attack
 {
-    public enum DirType
+    public enum DireType
     { 
         Mouse,
-        Entity
+        Entity,
+        ToPlayer
     }
 
 
@@ -32,7 +33,7 @@ namespace Game.Entity.Attack
         public float endDelay;
 
         [Header("Others")]
-        public DirType dirType;
+        public DireType dirType;
         public bool changeDireOnAir;
     }
 

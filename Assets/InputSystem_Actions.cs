@@ -199,6 +199,15 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""MousePos"",
+                    ""type"": ""Value"",
+                    ""id"": ""f3a79c9e-23ac-497f-b0c6-18c6916e461c"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -553,6 +562,17 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""action"": ""Block"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""a4be0608-82e1-45f6-b199-57bc2403d783"",
+                    ""path"": ""<Mouse>/position"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""MousePos"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -667,6 +687,15 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""MousePos"",
+                    ""type"": ""Value"",
+                    ""id"": ""6b1c2c05-81fe-44b3-9099-d3647d536a7c"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -1019,6 +1048,17 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": "";Keyboard&Mouse"",
                     ""action"": ""Block"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""3a1d5b88-a1d8-466d-93fc-6b1c01e72693"",
+                    ""path"": ""<Mouse>/position"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""MousePos"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -1618,6 +1658,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         m_Player_Presset1_Roll = m_Player_Presset1.FindAction("Roll", throwIfNotFound: true);
         m_Player_Presset1_UseSkill = m_Player_Presset1.FindAction("UseSkill", throwIfNotFound: true);
         m_Player_Presset1_Block = m_Player_Presset1.FindAction("Block", throwIfNotFound: true);
+        m_Player_Presset1_MousePos = m_Player_Presset1.FindAction("MousePos", throwIfNotFound: true);
         // Player_Presset2
         m_Player_Presset2 = asset.FindActionMap("Player_Presset2", throwIfNotFound: true);
         m_Player_Presset2_Move = m_Player_Presset2.FindAction("Move", throwIfNotFound: true);
@@ -1632,6 +1673,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         m_Player_Presset2_Roll = m_Player_Presset2.FindAction("Roll", throwIfNotFound: true);
         m_Player_Presset2_UseSkill = m_Player_Presset2.FindAction("UseSkill", throwIfNotFound: true);
         m_Player_Presset2_Block = m_Player_Presset2.FindAction("Block", throwIfNotFound: true);
+        m_Player_Presset2_MousePos = m_Player_Presset2.FindAction("MousePos", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -1738,6 +1780,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Presset1_Roll;
     private readonly InputAction m_Player_Presset1_UseSkill;
     private readonly InputAction m_Player_Presset1_Block;
+    private readonly InputAction m_Player_Presset1_MousePos;
     /// <summary>
     /// Provides access to input actions defined in input action map "Player_Presset1".
     /// </summary>
@@ -1797,6 +1840,10 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "Player_Presset1/Block".
         /// </summary>
         public InputAction @Block => m_Wrapper.m_Player_Presset1_Block;
+        /// <summary>
+        /// Provides access to the underlying input action "Player_Presset1/MousePos".
+        /// </summary>
+        public InputAction @MousePos => m_Wrapper.m_Player_Presset1_MousePos;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -1859,6 +1906,9 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
             @Block.started += instance.OnBlock;
             @Block.performed += instance.OnBlock;
             @Block.canceled += instance.OnBlock;
+            @MousePos.started += instance.OnMousePos;
+            @MousePos.performed += instance.OnMousePos;
+            @MousePos.canceled += instance.OnMousePos;
         }
 
         /// <summary>
@@ -1906,6 +1956,9 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
             @Block.started -= instance.OnBlock;
             @Block.performed -= instance.OnBlock;
             @Block.canceled -= instance.OnBlock;
+            @MousePos.started -= instance.OnMousePos;
+            @MousePos.performed -= instance.OnMousePos;
+            @MousePos.canceled -= instance.OnMousePos;
         }
 
         /// <summary>
@@ -1955,6 +2008,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Presset2_Roll;
     private readonly InputAction m_Player_Presset2_UseSkill;
     private readonly InputAction m_Player_Presset2_Block;
+    private readonly InputAction m_Player_Presset2_MousePos;
     /// <summary>
     /// Provides access to input actions defined in input action map "Player_Presset2".
     /// </summary>
@@ -2014,6 +2068,10 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "Player_Presset2/Block".
         /// </summary>
         public InputAction @Block => m_Wrapper.m_Player_Presset2_Block;
+        /// <summary>
+        /// Provides access to the underlying input action "Player_Presset2/MousePos".
+        /// </summary>
+        public InputAction @MousePos => m_Wrapper.m_Player_Presset2_MousePos;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -2076,6 +2134,9 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
             @Block.started += instance.OnBlock;
             @Block.performed += instance.OnBlock;
             @Block.canceled += instance.OnBlock;
+            @MousePos.started += instance.OnMousePos;
+            @MousePos.performed += instance.OnMousePos;
+            @MousePos.canceled += instance.OnMousePos;
         }
 
         /// <summary>
@@ -2123,6 +2184,9 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
             @Block.started -= instance.OnBlock;
             @Block.performed -= instance.OnBlock;
             @Block.canceled -= instance.OnBlock;
+            @MousePos.started -= instance.OnMousePos;
+            @MousePos.performed -= instance.OnMousePos;
+            @MousePos.canceled -= instance.OnMousePos;
         }
 
         /// <summary>
@@ -2507,6 +2571,13 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnBlock(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "MousePos" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnMousePos(InputAction.CallbackContext context);
     }
     /// <summary>
     /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "Player_Presset2" which allows adding and removing callbacks.
@@ -2599,6 +2670,13 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnBlock(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "MousePos" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnMousePos(InputAction.CallbackContext context);
     }
     /// <summary>
     /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "UI" which allows adding and removing callbacks.
