@@ -75,8 +75,8 @@ namespace Game.Entity.Player
             sprintAct.performed -= OnSprint;
             sprintAct.canceled -= OnSprint;
 
-            rollAct.performed -= ctx => OnRoll?.Invoke(player.GetFaceDirection());
-            mouseAct.performed -= ctx => MousePos = ctx.ReadValue<Vector2>();
+            /*rollAct.performed -= ctx => OnRoll?.Invoke(player.GetFaceDirection());
+            mouseAct.performed -= ctx => MousePos = ctx.ReadValue<Vector2>();*/
         }
 
 
