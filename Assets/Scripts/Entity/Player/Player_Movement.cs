@@ -1,10 +1,27 @@
+using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
+using UnityEngine.VFX;
 
 namespace Game.Entity.Player.Movement
 {
+    public enum VFX_ConfigType 
+    { 
+        Walking,
+        Running,
+        Rolling
+    }
+
+    [Serializable]
+    public struct VFX_Configs
+    {
+        public VisualEffect visualEffect;
+
+        public VFX_ConfigType type;
+    }
+
     public class Player_Movement : MonoBehaviour
     {
         [Header("Basic stats")]
@@ -29,12 +46,23 @@ namespace Game.Entity.Player.Movement
         [SerializeField] Vector2 velocity;
         [SerializeField] Vector2 rollDirection;
 
+        [Header("VFX")]
+        [SerializeField] VFX_Configs[] vfx_Configs; 
+
         [Header("Events")]
         //public UnityEvent OnPlayerStartWalk;
+        [HideInInspector]
         public UnityEvent OnPlayerWalk;
-        public UnityEvent OnPlayeStopWalk;
+        [HideInInspector]
+        public UnityEvent OnPlayerStopWalk;
+        [HideInInspector]
         public UnityEvent OnPlayerRun;
+        [HideInInspector]
         public UnityEvent OnPlayeStopRun;
+        [HideInInspector]
+        public UnityEvent<Vector2> OnPlayerRoll;
+        [HideInInspector]
+        public UnityEvent OnPlayerStopRoll;
 
         Rigidbody2D rb;
         PlayerInputHandler inputHandler;
@@ -55,7 +83,15 @@ namespace Game.Entity.Player.Movement
 
             // Eventos de quando andar e quando parar de andar (mais versatil e menos dependente de referencia)
             OnPlayerWalk?.AddListener(() => animator.SetBool("IsWalking", true));
-            OnPlayeStopWalk?.AddListener(() => animator.SetBool("IsWalking", false));
+            OnPlayerStopWalk?.AddListener(() => animator.SetBool("IsWalking", false));
+
+            foreach (var vfx in vfx_Configs)
+            {
+                OnPlayerStopRoll?.AddListener(() => vfx.visualEffect.Stop());
+
+                OnPlayerRoll?.AddListener((value) => vfx.visualEffect.Play());
+            }
+
         }
 
         void Update()
@@ -74,7 +110,7 @@ namespace Game.Entity.Player.Movement
                 if (velocity.magnitude > 0)
                     OnPlayerWalk?.Invoke();
                 else
-                    OnPlayeStopWalk?.Invoke();
+                    OnPlayerStopWalk?.Invoke();
             }
             else
             {
@@ -140,11 +176,14 @@ namespace Game.Entity.Player.Movement
             {
                 rb.AddForce(dir * rollForce);
                 timer += Time.deltaTime;
+
+                OnPlayerRoll?.Invoke(dir);
                 yield return null;
             }
 
             //rb.AddForce = Vector2.zero;
             isRolling = false;
+            OnPlayerStopRoll?.Invoke();
 
             yield return new WaitForSeconds(rollCooldown);
 
