@@ -45,7 +45,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ffc24a9428e33e94aa5b9322ade1f292, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameController
-  currentBindPresset: 2
+  currentBindPresset: 1
 --- !u!114 &1996505569860453447
 MonoBehaviour:
   m_ObjectHideFlags: 0
