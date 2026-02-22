@@ -493,6 +493,18 @@ PrefabInstance:
       propertyPath: camMoveFactor
       value: 50
       objectReference: {fileID: 0}
+    - target: {fileID: 5492029445704195628, guid: 3443795f92115ce429c29054b20c6c47, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 2.4319
+      objectReference: {fileID: 0}
+    - target: {fileID: 5492029445704195628, guid: 3443795f92115ce429c29054b20c6c47, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 2.4319
+      objectReference: {fileID: 0}
+    - target: {fileID: 5492029445704195628, guid: 3443795f92115ce429c29054b20c6c47, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 2.4319
+      objectReference: {fileID: 0}
     - target: {fileID: 6711029741310680963, guid: 3443795f92115ce429c29054b20c6c47, type: 3}
       propertyPath: m_LocalPosition.x
       value: 2.07446
