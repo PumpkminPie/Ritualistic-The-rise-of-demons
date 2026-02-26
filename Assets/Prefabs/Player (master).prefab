@@ -29,7 +29,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 5492029445704195628}
+  - {fileID: 9151896905162752057}
   - {fileID: 3734687772243225508}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -85,6 +85,38 @@ MonoBehaviour:
   freezeXAxis: 0
   freezeYAxis: 0
   freezeZAxis: 0
+--- !u!1 &2778815762517176409
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 9151896905162752057}
+  m_Layer: 0
+  m_Name: player father
+  m_TagString: Player
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &9151896905162752057
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2778815762517176409}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 5492029445704195628}
+  m_Father: {fileID: 6711029741310680963}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &3925969879560836590
 GameObject:
   m_ObjectHideFlags: 0
@@ -234,7 +266,7 @@ GameObject:
   - component: {fileID: 4987005359434745612}
   - component: {fileID: 7195794935686251113}
   m_Layer: 0
-  m_Name: New VFX 1
+  m_Name: dash vfx
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -248,13 +280,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4339449661245361341}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.31553996, y: -0.46586, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalRotation: {x: 0, y: 0.38268343, z: 0, w: 0.92387956}
+  m_LocalPosition: {x: 0, y: -0.423, z: 0}
+  m_LocalScale: {x: 2, y: 2, z: 2}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 5492029445704195628}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_Father: {fileID: 142801214216297499}
+  m_LocalEulerAnglesHint: {x: 0, y: 45, z: 0}
 --- !u!2083052967 &4987005359434745612
 VisualEffect:
   m_ObjectHideFlags: 0
@@ -370,14 +402,14 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5704236041141353371}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.508, y: 0.294, z: 0}
-  m_LocalScale: {x: 2.4319, y: 2.4319, z: 2.4319}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 4112723881270625108}
-  - {fileID: 4398895107510947964}
-  m_Father: {fileID: 6711029741310680963}
+  - {fileID: 142801214216297499}
+  m_Father: {fileID: 9151896905162752057}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!61 &5523138899148530364
 BoxCollider2D:
@@ -486,12 +518,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 94a6744af12be5c4a9acffdaaedaa77c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Player_Movement
+  playerSprite: {fileID: 4011243849052042781}
   maxWalkSpeed: 7
   maxSprintSpeed: 13
   isRightFacing: 0
   canMove: 1
   currentMaxSpeed: 0
-  rollForce: 75
+  rollForce: 250
   rollTime: 0.4
   rollCooldown: 1
   isRolling: 0
@@ -499,16 +532,26 @@ MonoBehaviour:
   direction: {x: 0, y: 0}
   velocity: {x: 0, y: 0}
   rollDirection: {x: 0, y: 0}
+  vfx_groups:
+  - objVisual: {fileID: 5823827302549621087}
+    visualEffect: {fileID: 4987005359434745612}
+    type: 2
   OnPlayerWalk:
     m_PersistentCalls:
       m_Calls: []
-  OnPlayeStopWalk:
+  OnPlayerStopWalk:
     m_PersistentCalls:
       m_Calls: []
   OnPlayerRun:
     m_PersistentCalls:
       m_Calls: []
   OnPlayeStopRun:
+    m_PersistentCalls:
+      m_Calls: []
+  OnPlayerRoll:
+    m_PersistentCalls:
+      m_Calls: []
+  OnPlayerStopRoll:
     m_PersistentCalls:
       m_Calls: []
   animator: {fileID: 1847586608939527736}
@@ -711,6 +754,38 @@ MonoBehaviour:
   lastTapDir: {x: 0, y: 0}
   doubleTapThreshold: 0.25
   playerInput: {fileID: 4574481817432302158}
+--- !u!1 &5823827302549621087
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 142801214216297499}
+  m_Layer: 3
+  m_Name: dash
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &142801214216297499
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5823827302549621087}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 4398895107510947964}
+  m_Father: {fileID: 5492029445704195628}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &7801705249294056706
 GameObject:
   m_ObjectHideFlags: 0
@@ -739,7 +814,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.54038, y: 0.54038, z: 0.54038}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5492029445704195628}

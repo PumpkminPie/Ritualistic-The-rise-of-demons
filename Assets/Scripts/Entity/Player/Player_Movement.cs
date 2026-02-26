@@ -17,6 +17,7 @@ namespace Game.Entity.Player.Movement
     [Serializable]
     public struct VFX_Configs
     {
+        public GameObject objVisual;
         public VisualEffect visualEffect;
 
         public VFX_ConfigType type;
@@ -25,6 +26,7 @@ namespace Game.Entity.Player.Movement
     public class Player_Movement : MonoBehaviour
     {
         [Header("Basic stats")]
+        [SerializeField] SpriteRenderer playerSprite;
         [SerializeField] float maxWalkSpeed = 1;
         [SerializeField] float maxSprintSpeed = 2;
         [SerializeField] bool isRightFacing = true;
@@ -47,7 +49,7 @@ namespace Game.Entity.Player.Movement
         [SerializeField] Vector2 rollDirection;
 
         [Header("VFX")]
-        [SerializeField] VFX_Configs[] vfx_Configs; 
+        [SerializeField] VFX_Configs[] vfx_groups; 
 
         [Header("Events")]
         //public UnityEvent OnPlayerStartWalk;
@@ -67,6 +69,7 @@ namespace Game.Entity.Player.Movement
         Rigidbody2D rb;
         PlayerInputHandler inputHandler;
         PlayerInput playerInput;
+        //Transform ogPlayerTransform { get { return transform; } set { ogPlayerTransform = value; } }
         [SerializeField] Animator animator;
 
         void Start()
@@ -75,6 +78,8 @@ namespace Game.Entity.Player.Movement
             inputHandler = GetComponent<PlayerInputHandler>();
             //animator = GetComponent<Animator>();
             playerInput = GetComponent<PlayerInput>();
+
+            //ogPlayerTransform = transform;
 
             // event pra quando o input pegar o "double click" direcional OU quando apertar a tecla de rolar (ambos suportados)
             inputHandler.OnRoll?.AddListener((value) => TryRoll(value));
@@ -85,13 +90,16 @@ namespace Game.Entity.Player.Movement
             OnPlayerWalk?.AddListener(() => animator.SetBool("IsWalking", true));
             OnPlayerStopWalk?.AddListener(() => animator.SetBool("IsWalking", false));
 
-            foreach (var vfx in vfx_Configs)
+            /*foreach (var vfx in vfx_groups)
             {
                 OnPlayerStopRoll?.AddListener(() => vfx.visualEffect.Stop());
 
                 OnPlayerRoll?.AddListener((value) => vfx.visualEffect.Play());
+            }*/
+            foreach (var vfx in vfx_groups)
+            {                
+                vfx.visualEffect.Stop();
             }
-
         }
 
         void Update()
@@ -157,6 +165,38 @@ namespace Game.Entity.Player.Movement
             //if (mouseDirection == Vector2.zero)
             rollDirection = dir;
 
+            foreach (var vfx in vfx_groups)
+            {
+                if (vfx.type == VFX_ConfigType.Rolling)
+                {
+                    var _rot = vfx.objVisual.transform.localRotation;
+                    float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+                    angle += 180f;
+
+                    if (dir == Vector2.zero)
+                        break;
+
+                    /*if (dir.x > 0 && dir.y > 0)
+                        angle = 44;
+                    else if (dir.x < 0 && dir.y > 0)
+                        angle = 144;
+                    else if (dir.x > 0 && dir.y < 0)
+                        angle = -44;
+                    else if (dir.x < 0 && dir.y < 0)
+                        angle = -144;
+                    else
+                        angle = 0;*/
+
+                    //if (MathF.Abs(dir.x) > 1 && MathF.Abs(dir.y) > 1)
+                        vfx.objVisual.transform.localRotation = Quaternion.Euler(0, 0, angle);
+                    /*else
+                        vfx.objVisual.transform.localRotation = Quaternion.Euler(0, 0, -angle);*/
+
+
+                    vfx.visualEffect.Play();
+                }
+            }
+
             StartCoroutine(IRoll(rollDirection));
         }
 
@@ -194,11 +234,7 @@ namespace Game.Entity.Player.Movement
         {
             isRightFacing = _side;
 
-            if (_side)
-                transform.rotation = Quaternion.Euler(0, 180f, 0);
-
-            else
-                transform.rotation = Quaternion.Euler(0, 0, 0);
+            playerSprite.flipX = isRightFacing;
         }
 
         public Vector2 GetVelocity()
