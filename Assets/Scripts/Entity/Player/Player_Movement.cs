@@ -87,8 +87,8 @@ namespace Game.Entity.Player.Movement
             inputHandler.OnPressMovement?.AddListener(() => animator.SetTrigger("StartWalking"));
 
             // Eventos de quando andar e quando parar de andar (mais versatil e menos dependente de referencia)
-            OnPlayerWalk?.AddListener(() => animator.SetBool("IsWalking", true));
-            OnPlayerStopWalk?.AddListener(() => animator.SetBool("IsWalking", false));
+            //OnPlayerWalk?.AddListener(() => );
+            //OnPlayerStopWalk?.AddListener(() => );
 
             /*foreach (var vfx in vfx_groups)
             {
@@ -116,9 +116,15 @@ namespace Game.Entity.Player.Movement
             if (!inputHandler.Sprint)
             {
                 if (velocity.magnitude > 0)
+                {
                     OnPlayerWalk?.Invoke();
+                    animator.SetBool("IsWalking", true);
+                }
                 else
+                {
                     OnPlayerStopWalk?.Invoke();
+                    animator.SetBool("IsWalking", false);
+                }
             }
             else
             {
@@ -216,6 +222,7 @@ namespace Game.Entity.Player.Movement
             {
                 rb.AddForce(dir * rollForce);
                 timer += Time.deltaTime;
+                animator.SetBool("IsDashing", true);
 
                 OnPlayerRoll?.Invoke(dir);
                 yield return null;
@@ -223,6 +230,7 @@ namespace Game.Entity.Player.Movement
 
             //rb.AddForce = Vector2.zero;
             isRolling = false;
+            animator.SetBool("IsDashing", false);
             OnPlayerStopRoll?.Invoke();
 
             yield return new WaitForSeconds(rollCooldown);
