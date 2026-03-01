@@ -51,20 +51,14 @@ namespace Game.Entity.Player.Movement
         [Header("VFX")]
         [SerializeField] VFX_Configs[] vfx_groups; 
 
-        [Header("Events")]
+        //[Header("Events")]
         //public UnityEvent OnPlayerStartWalk;
-        [HideInInspector]
-        public UnityEvent OnPlayerWalk;
-        [HideInInspector]
-        public UnityEvent OnPlayerStopWalk;
-        [HideInInspector]
-        public UnityEvent OnPlayerRun;
-        [HideInInspector]
-        public UnityEvent OnPlayeStopRun;
-        [HideInInspector]
-        public UnityEvent<Vector2> OnPlayerRoll;
-        [HideInInspector]
-        public UnityEvent OnPlayerStopRoll;
+        public event Action OnPlayerWalk;
+        public event Action OnPlayerStopWalk;
+        public event Action OnPlayerRun;
+        public event Action OnPlayeStopRun;
+        public event Action<Vector2> OnPlayerRoll;
+        public event Action OnPlayerStopRoll;
 
         Rigidbody2D rb;
         PlayerInputHandler inputHandler;
@@ -82,9 +76,8 @@ namespace Game.Entity.Player.Movement
             //ogPlayerTransform = transform;
 
             // event pra quando o input pegar o "double click" direcional OU quando apertar a tecla de rolar (ambos suportados)
-            inputHandler.OnRoll?.AddListener((value) => TryRoll(value));
-
-            inputHandler.OnPressMovement?.AddListener(() => animator.SetTrigger("StartWalking"));
+            inputHandler.OnRoll += (value) => TryRoll(value);
+            inputHandler.OnPressMovement += () => animator.SetTrigger("StartWalking");
 
             // Eventos de quando andar e quando parar de andar (mais versatil e menos dependente de referencia)
             //OnPlayerWalk?.AddListener(() => );

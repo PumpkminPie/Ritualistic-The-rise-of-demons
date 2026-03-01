@@ -1,4 +1,6 @@
+using Unity.VisualScripting;
 using UnityEngine;
+using static UnityEngine.GraphicsBuffer;
 
 namespace Game.Entity.Attack
 {
@@ -10,6 +12,8 @@ namespace Game.Entity.Attack
         public float timeToDelete = 5;
         public float range = 5;
         public Vector3 direction;
+
+        //public Entity_AttackModule_FireBall(Entity_AttackRunner executer) : base(executer){}
 
         public override void OnStart(Entity_AttackRunner executor)
         { 
@@ -29,43 +33,62 @@ namespace Game.Entity.Attack
             }
             //Debug.Log(direction);
         }
-        
+
         public override void OnExecute(Entity_AttackRunner executor)
         {
-            for (int i = 0; i < executor.savedData.Count; i++) 
+            direction = executor.mouseDirection.normalized;
+
+            for (int i = executor.modulesData.Length - 1; i >= 0; i--)
             {
-                var _obj = executor.savedData[i];
-
-                if (_obj == null)
+                foreach (var data in executor.modulesData[i].savedData)
                 {
-                    executor.savedData.Remove(_obj);
-                    continue;
-                }
+                    var obj = data.gameObject;
 
-                if (_obj.TryGetComponent<Projectiles_BasicScript>(out var script))
-                {
-                    script.SetDirection(direction);
-                    script.SetSpeed(speed);
-                    script.SetRange(range);
-                }
-                //Debug.Log("achou");
+                    if (obj == null)
+                    {
+                        executor.modulesData[i].savedData.RemoveAt(i);
+                        continue;
+                    }
 
+                    if (obj.TryGetComponent<Projectiles_BasicScript>(out var script))
+                    {
+                        script.SetDirection(direction);
+                        script.SetSpeed(speed);
+                        script.SetRange(range);
+                    }
+                }
             }
-            //else
-                //Debug.Log("n achou");
+        }
 
-            //Debug.Log("execute");
-
+        public override void OnFinish(Entity_AttackRunner executor)
+        {
+            for (int i = executor.modulesData.Length - 1; i >= 0; i--)
+            {
+                executor.modulesData[i].savedData.Clear();
+            }
         }
 
         public override void OnHit(Entity_AttackRunner executor, Collider2D target)
         {
-            for (int i = 0; i < executor.savedData.Count; i++)
+            for (int i = executor.modulesData.Length - 1; i >= 0; i--)
             {
-                var obj = executor.savedData[i];
+                foreach (var data in executor.modulesData[i].savedData)
+                {
+                    var obj = data.gameObject;
 
-                if(obj == target.gameObject)
-                    Destroy(obj);
+                    if (obj == null)
+                    {
+                        executor.modulesData[i].savedData.RemoveAt(i);
+                        continue;
+                    }
+
+                    if (obj == target.gameObject)
+                    {
+                        Object.Destroy(obj);
+                        executor.modulesData[i].savedData.RemoveAt(i);
+                        break;
+                    }
+                }
             }
         }
 
@@ -73,5 +96,10 @@ namespace Game.Entity.Attack
         {
             direction = dir.normalized;
         }*/
+
+        void OnDisable()
+        {
+            direction = Vector3.zero;
+        }
     }
 }

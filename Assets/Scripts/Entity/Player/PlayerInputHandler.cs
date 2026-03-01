@@ -13,9 +13,9 @@ namespace Game.Entity.Player
         public Vector2 MousePos { get; private set; }
         public bool Sprint {  get; private set; }
         //public Vector2 DoubleClickMove { get; private set; }
-        public UnityEvent<Vector2> OnDoubleTapMove;
-        public UnityEvent<Vector2> OnRoll;
-        public UnityEvent OnPressMovement;
+        public event Action<Vector2> OnDoubleTapMove;
+        public event Action<Vector2> OnRoll;
+        public event Action OnPressMovement;
 
         //public float doubleClickTime = 0.25f;
         public float lastTapTime;
@@ -58,23 +58,30 @@ namespace Game.Entity.Player
             moveAct.performed   += OnMove;
             moveAct.canceled    += OnMove;
             moveAct.started     += ctx => OnPressMovement?.Invoke();
-            mouseAct.performed  += ctx => MousePos = ctx.ReadValue<Vector2>();
+            mouseAct.performed  += OnMoveMouse;
 
             sprintAct.performed += OnSprint;
-            sprintAct.canceled += OnSprint;
+            sprintAct.canceled  += OnSprint;
 
             rollAct.performed   += ctx => OnRoll?.Invoke(player.GetFaceDirection());
 
             //Debug.Log(playerInput.currentActionMap.name);
         }
+
+        private void OnMoveMouse(InputAction.CallbackContext context)
+        {
+            MousePos = context.ReadValue<Vector2>();
+        }
+
         void OnDisable()
         {
-            moveAct.performed -= OnMove;
-            moveAct.canceled -= OnMove;
+            moveAct.performed   -= OnMove;
+            moveAct.canceled    -= OnMove;
 
             sprintAct.performed -= OnSprint;
-            sprintAct.canceled -= OnSprint;
+            sprintAct.canceled  -= OnSprint;
 
+            //mouseAct.performed  -= OnMoveMouse;
             /*rollAct.performed -= ctx => OnRoll?.Invoke(player.GetFaceDirection());
             mouseAct.performed -= ctx => MousePos = ctx.ReadValue<Vector2>();*/
         }
