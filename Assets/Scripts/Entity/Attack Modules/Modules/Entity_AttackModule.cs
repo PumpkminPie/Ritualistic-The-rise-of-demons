@@ -16,6 +16,19 @@ namespace Game.Entity.Attack
         public virtual void OnFinish(Entity_AttackRunner executor) { }
         public abstract void OnHit(Entity_AttackRunner executor, Collider2D target);
 
+        public void CheckCollision(Entity_AttackRunner executor, Collider2D col)
+        {
+            
+            Collider2D[] hits = Physics2D.OverlapBoxAll(
+            col.bounds.center,
+            col.bounds.extents,
+            0f
+            );
+
+            if (hits.Length > 0)
+                executor.NotifyHit(col);
+        }
+
         /*void OnHitEvent(Collider2D target, Entity_AttackRunner executor)
         {
             OnHit(executor, target);

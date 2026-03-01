@@ -34,7 +34,7 @@ namespace Game.Entity.Attack
 
         [Header("Others")]
         public DireType dirType;
-        public bool changeDireOnAir;
+        //public bool changeDireOnAir;
     }
 
     [CreateAssetMenu(menuName = "Entitys/Combat/AttackData")]

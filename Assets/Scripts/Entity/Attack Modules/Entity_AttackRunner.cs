@@ -87,7 +87,7 @@ namespace Game.Entity.Attack
 
             playerDirection = (playerTrans.position - transform.position).normalized;
 
-            var mouseWorld = Camera.main.ScreenToWorldPoint(playerInput.MousePos);
+            var mouseWorld = mainCam.ScreenToWorldPoint(playerInput.MousePos);
             mouseDirection = (mouseWorld - transform.position);
             //{ 
             /*switch (state)
@@ -171,8 +171,8 @@ namespace Game.Entity.Attack
 
                     //Debug.Log("phase 2");
 
-                    if (mod.changeDireOnAir)
-                    {
+                    /*if (mod.changeDireOnAir)
+                    {*/
                         if (mod.dirType == DireType.Mouse)
                             OnAir?.Invoke(mouseDirection);
                         else if (mod.dirType == DireType.Entity)
@@ -182,7 +182,7 @@ namespace Game.Entity.Attack
                         //Debug.Log("phase 2.5");
 
                         mod.module.OnExecute(this);
-                    }
+                    //}
 
                     yield return null; 
                 }
@@ -220,6 +220,8 @@ namespace Game.Entity.Attack
 
             foreach (var mod in currentAttackData.attackModules)
                 mod.module.OnHit(this, col);
+
+            //Debug.Log("colidiu 1");
         }
 
         public GameObject CreateObjData(GameObject obj, Vector3 pos, Quaternion rot)
@@ -236,10 +238,12 @@ namespace Game.Entity.Attack
         /*void OnCollisionEnter2D(Collision2D collision)
         {
             NotifyHit(collision.collider);
-        }*/
+            Debug.Log("colidiu 2");
+        }
         void OnTriggerEnter2D(Collider2D collision)
         {
             NotifyHit(collision);
-        }
+            Debug.Log("colidiu 2");
+        }*/
     }
 }
