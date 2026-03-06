@@ -1,8 +1,9 @@
-using Unity.VisualScripting;
+using Game.PoolSystem;
 using UnityEngine;
-using static UnityEngine.GraphicsBuffer;
+using System.Collections;
+using Game.PoolSystem.Object;
 
-namespace Game.Entity.Attack
+namespace Game.Entity.Attack.FireBall
 {
     [CreateAssetMenu(menuName = "Entitys/Combat/AttackModule/Fire Ball")]
     public class Entity_AttackModule_FireBall : Entity_AttackModule
@@ -13,15 +14,17 @@ namespace Game.Entity.Attack
         public float range = 5;
         public Vector3 direction;
 
+        public int maxActives = 10;
+
         //public Entity_AttackModule_FireBall(Entity_AttackRunner executer) : base(executer){}
 
         public override void OnStart(Entity_AttackRunner executor)
         { 
             //GameObject fireBall = null;
 
-            direction = executor.mouseDirection;
+            /*direction = executor.mouseDirection.normalized;
 
-            var _obj = executor.CreateObjData(prefabFireBall, executor.ownerTransform.position, Quaternion.identity);
+            var _obj = executor.CreateObjData(prefabFireBall, this, executor.ownerTransform.position, Quaternion.identity);
 
             Destroy(_obj, timeToDelete);
 
@@ -30,74 +33,49 @@ namespace Game.Entity.Attack
                 script.SetDirection(direction);
                 script.SetSpeed(speed);
                 script.SetRange(range);
+            }*/
+
+            direction = executor.mouseDirection.normalized;
+
+            var obj = PoolManager.Instance.Get(
+                prefabFireBall,
+                executor.ownerTransform.position,
+                Quaternion.identity
+            );
+
+            //PoolManager.Instance.maxActive[obj] = maxActives;
+
+            if (obj.TryGetComponent<Projectiles_BasicScript>(out var script))
+            {
+                script.Init(direction, speed, range, timeToDelete);
             }
+
             //Debug.Log(direction);
+            
         }
 
         public override void OnExecute(Entity_AttackRunner executor)
         {
             direction = executor.mouseDirection.normalized;
 
-            for (int i = executor.modulesData.Length - 1; i >= 0; i--)
+            /*var obj = PoolManager.Instance.Get(
+                prefabFireBall,
+                executor.ownerTransform.position,
+                Quaternion.identity
+            );*/
+
+            /*if (obj.TryGetComponent<Projectiles_BasicScript>(out var script))
             {
-                foreach (var data in executor.modulesData[i].savedData)
-                {
-                    var obj = data.gameObject;
-
-                    if (obj == null)
-                    {
-                        executor.modulesData[i].savedData.RemoveAt(i);
-                        continue;
-                    }
-
-                    if (obj.TryGetComponent<Projectiles_BasicScript>(out var script))
-                    {
-                        script.SetDirection(direction);
-                        script.SetSpeed(speed);
-                        script.SetRange(range);
-                    }
-                }
-            }
-        }
-
-        public override void OnFinish(Entity_AttackRunner executor)
-        {
-            for (int i = executor.modulesData.Length - 1; i >= 0; i--)
-            {
-                executor.modulesData[i].savedData.Clear();
-            }
+                script.Init(direction, speed, range, timeToDelete);
+            }*/
         }
 
         public override void OnHit(Entity_AttackRunner executor, Collider2D target)
         {
-            for (int i = executor.modulesData.Length - 1; i >= 0; i--)
-            {
-                foreach (var data in executor.modulesData[i].savedData)
-                {
-                    var obj = data.gameObject;
-
-                    if (obj == null)
-                    {
-                        executor.modulesData[i].savedData.RemoveAt(i);
-                        continue;
-                    }
-
-                    if (obj == target.gameObject)
-                    {
-                        Object.Destroy(obj);
-                        executor.modulesData[i].savedData.RemoveAt(i);
-                        break;
-                    }
-                }
-            }
+            
         }
 
-        /*void OnAirHandler(Vector3 dir)
-        {
-            direction = dir.normalized;
-        }*/
-
-        void OnDisable()
+        void OnEnable()
         {
             direction = Vector3.zero;
         }

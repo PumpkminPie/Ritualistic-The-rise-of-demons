@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace Game.Entity.Attack
@@ -11,10 +12,12 @@ namespace Game.Entity.Attack
             this.executor = executor;
         }*/
 
+        protected event Action OnCollide;
+
         public virtual void OnStart(Entity_AttackRunner executor) { }
         public virtual void OnExecute(Entity_AttackRunner executor) { }
         public virtual void OnFinish(Entity_AttackRunner executor) { }
-        public abstract void OnHit(Entity_AttackRunner executor, Collider2D target);
+        public virtual void OnHit(Entity_AttackRunner executor, Collider2D target) { OnCollide?.Invoke(); }
 
         public void CheckCollision(Entity_AttackRunner executor, Collider2D col)
         {
@@ -31,7 +34,7 @@ namespace Game.Entity.Attack
 
         /*void OnHitEvent(Collider2D target, Entity_AttackRunner executor)
         {
-            OnHit(executor, target);
+            OnCollide(executor, target);
         }
 
         private void OnEnable()

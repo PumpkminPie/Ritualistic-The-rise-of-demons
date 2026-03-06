@@ -46,7 +46,7 @@ namespace Game.Entity.Attack
 
         public bool canAttack = true;
         //[SerializeField] bool isPlayer;
-        public ModuleAttacks[] modulesData;
+        //public ModuleAttacks[] modulesData;
 
         Camera mainCam;
 
@@ -89,6 +89,7 @@ namespace Game.Entity.Attack
 
             var mouseWorld = mainCam.ScreenToWorldPoint(playerInput.MousePos);
             mouseDirection = (mouseWorld - transform.position);
+            mouseDirection.z = 0;
             //{ 
             /*switch (state)
             {*/
@@ -173,15 +174,15 @@ namespace Game.Entity.Attack
 
                     /*if (mod.changeDireOnAir)
                     {*/
-                        if (mod.dirType == DireType.Mouse)
-                            OnAir?.Invoke(mouseDirection);
-                        else if (mod.dirType == DireType.Entity)
-                            OnAir?.Invoke(entityDirection);
-                        else
-                            OnAir?.Invoke(playerDirection);
-                        //Debug.Log("phase 2.5");
+                    if (mod.dirType == DireType.Mouse)
+                        OnAir?.Invoke(mouseDirection);
+                    else if (mod.dirType == DireType.Entity)
+                        OnAir?.Invoke(entityDirection);
+                    else
+                        OnAir?.Invoke(playerDirection);
+                    //Debug.Log("phase 2.5");
 
-                        mod.module.OnExecute(this);
+                    mod.module.OnExecute(this);
                     //}
 
                     yield return null; 
@@ -224,16 +225,16 @@ namespace Game.Entity.Attack
             //Debug.Log("colidiu 1");
         }
 
-        public GameObject CreateObjData(GameObject obj, Vector3 pos, Quaternion rot)
+        /*public GameObject CreateObjData(GameObject obj, Entity_AttackModule modul, Vector3 pos, Quaternion rot)
         {
             var _ob = Instantiate(obj, pos, rot);
 
             foreach (var data in modulesData)
-            if (!data.savedData.Contains(obj))
+            if (!data.savedData.Contains(obj) && modul == data.attackModule)
                 data.savedData.Add(_ob);
 
             return _ob;
-        }
+        }*/
 
         /*void OnCollisionEnter2D(Collision2D collision)
         {
