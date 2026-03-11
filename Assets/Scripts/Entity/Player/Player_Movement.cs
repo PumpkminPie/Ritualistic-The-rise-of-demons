@@ -99,48 +99,49 @@ namespace Game.Entity.Player.Movement
         {
             // pegar input do playerTrans (vec2)
             if (canMove)
+            {
                 direction = (inputHandler.Move).normalized;
+
+                //if (rb.attachedColliderCount == 0)
+                velocity = (direction * currentMaxSpeed);
+
+                if (!inputHandler.Sprint)
+                {
+                    if (velocity.magnitude > 0)
+                    {
+                        OnPlayerWalk?.Invoke();
+                        animator.SetBool("IsWalking", true);
+                    }
+                    else
+                    {
+                        OnPlayerStopWalk?.Invoke();
+                        animator.SetBool("IsWalking", false);
+                    }
+                }
+                else
+                {
+                    if (velocity.magnitude > 0)
+                        OnPlayerRun?.Invoke();
+                    else
+                        OnPlayeStopRun?.Invoke();
+                }
+
+                Sprint();
+
+                /*if (isRolling)
+                    TryRoll();
+                else
+                    rollTime = Mathf.MoveTowards(rollTime, rollRechargeMaxTime, 0.1f);*/
+
+                if (inputHandler.Move.x < 0 && !isRightFacing)
+                    FlipPlayer(true);
+                if (inputHandler.Move.x > 0 && isRightFacing)
+                    FlipPlayer(false);
+            }
             else
                 direction = Vector2.zero;
 
-            //if (rb.attachedColliderCount == 0)
-            velocity = (direction * currentMaxSpeed);
-
-            if (!inputHandler.Sprint)
-            {
-                if (velocity.magnitude > 0)
-                {
-                    OnPlayerWalk?.Invoke();
-                    animator.SetBool("IsWalking", true);
-                }
-                else
-                {
-                    OnPlayerStopWalk?.Invoke();
-                    animator.SetBool("IsWalking", false);
-                }
-            }
-            else
-            {
-                if (velocity.magnitude > 0)
-                    OnPlayerRun?.Invoke();
-                else
-                    OnPlayeStopRun?.Invoke();
-            }
-
-            Sprint();
-
-            /*if (isRolling)
-                TryRoll();
-            else
-                rollTime = Mathf.MoveTowards(rollTime, rollRechargeMaxTime, 0.1f);*/
-
             canMove = isRolling ? false : true;
-
-            if (inputHandler.Move.x < 0 && !isRightFacing)
-                FlipPlayer(true);
-            if (inputHandler.Move.x > 0 && isRightFacing)
-                FlipPlayer(false);
-
             /*bool isMoving = inputHandler.Move != Vector2.zero;
 
             if (isMoving && !wasMoving)

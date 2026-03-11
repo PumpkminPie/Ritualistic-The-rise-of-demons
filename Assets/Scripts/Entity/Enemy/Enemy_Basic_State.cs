@@ -1,3 +1,4 @@
+using Game.Entity.Health;
 using Unity.IntegerTime;
 using UnityEngine;
 
@@ -17,6 +18,21 @@ namespace Game.Entity.Enemy.StateMachine.States
             Vector2 velocity = Vector2.one, currentVel = Vector2.one;
 
             enemy.transform.position = Vector2.Lerp(enemy.transform.position, target.position, vel * Time.deltaTime);
+        }
+
+        public void Attack(Enemy_Basic_StateMachine enemy, Transform target)
+        {
+            var dire = (enemy.transform.position - target.position).normalized;
+
+            RaycastHit2D[] collisions = Physics2D.CapsuleCastAll(enemy.transform.position, enemy.infoAsset.meleeAttackSize, CapsuleDirection2D.Vertical, 0, dire);
+
+            foreach (var hit in collisions)
+            {
+                if (hit.transform.TryGetComponent<Interfaces.IHealth>(out var health))
+                {
+                    health.ApplyDamage(enemy.infoAsset.meleeDamage);
+                }
+            }
         }
     }
 }

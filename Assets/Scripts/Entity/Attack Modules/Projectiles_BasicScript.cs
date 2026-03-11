@@ -91,8 +91,10 @@ public class Projectiles_BasicScript : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if ((colLayers.value & (1 << other.gameObject.layer)) == 0)
+        if(colLayers == (colLayers | (1 << other.gameObject.layer)))
             DeleteObj();
+
+        //Debug.Log("Hit: " + other.name);
     }
 
     public void Init(Vector3 direction, float speed, float range, float timeToDelete)

@@ -8,7 +8,8 @@ namespace Game
         // Interface para sistema de life geral (planejar -> ser mais geral, "abrindo portas")
         public interface IHealth
         {
-            void Attack();
+            void ApplyDamage(float damage);
+            void ApplyHealth(float health);
         }
 
         // Interface para debugs visuais futuros (!debug!)
