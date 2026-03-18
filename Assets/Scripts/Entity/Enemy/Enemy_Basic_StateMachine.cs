@@ -5,6 +5,7 @@ using Game.Entity.Player.Movement;
 using Game.Debug;
 using UnityEditor;
 using UnityEngine;
+using System.Collections;
 
 namespace Game.Entity.Enemy.StateMachine
 {
@@ -21,6 +22,9 @@ namespace Game.Entity.Enemy.StateMachine
         public Player_Movement playerMove;
         public Entity_AttackRunner attackRunner;
         public Enemy_Basic_Sensor sensor;
+
+        public bool canChase = true;
+
 
         void Awake()
         {
@@ -39,30 +43,26 @@ namespace Game.Entity.Enemy.StateMachine
 
             attackRunner.SetAttackData(infoAsset.attackData);
 
-            sensor.OnDetectPlayer?.AddListener(() => ChangeState(chaseState));
-            sensor.OnLostPlayer?.AddListener(() => ChangeState(idleState));
+            if (canChase)
+                sensor.OnDetectPlayer += (() => ChangeState(chaseState));
+
+            if (attackRunner.canAttack)
+                sensor.OnPlayerStayInAttackArea += (() => ChangeState(attackState));
+
+            sensor.OnLostPlayer += (() => ChangeState(idleState));
+        }
+
+        private void OnDisable()
+        {
+            sensor.OnDetectPlayer -= (() => ChangeState(chaseState));
+            sensor.OnLostPlayer -= (() => ChangeState(idleState));
+
+            sensor.OnPlayerStayInAttackArea -= (() => ChangeState(attackState));
         }
 
         void Update()
         {
             currentState.Execute(this);
-
-            if (attackRunner.canAttack)
-            {
-                foreach (var mod in infoAsset.attackData.attackModules)
-                {
-                    var _dist = transform.position - playerMove.transform.position;
-                    var _dire = (transform.position - playerMove.transform.position).normalized;
-
-                    if (_dist.magnitude <= mod.enemyPart.attackDistance)
-                    {
-                        if (attackRunner.canAttack)
-                            ChangeState(attackState);
-
-                        break;
-                    } 
-                }
-            }
         }
 
         public void ChangeState(Enemy_Basic_States state)

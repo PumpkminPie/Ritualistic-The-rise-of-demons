@@ -11,6 +11,12 @@ namespace Game.Entity.Enemy.StateMachine.States
 
         public override void Enter(Enemy_Basic_StateMachine enemy)
         {
+            if (!enemy.attackRunner.canAttack) 
+            {
+                Execute(enemy); 
+                return; 
+            }
+
             enemy.attackRunner.EnterMethod();
         }
 

@@ -12,9 +12,6 @@ namespace Game.Entity.Attack.FireBall
         public float speed = 5;
         public float timeToDelete = 5;
         public float range = 5;
-        public Vector3 direction;
-
-        public int maxActives = 10;
 
         //public Entity_AttackModule_FireBall(Entity_AttackRunner executer) : base(executer){}
 
@@ -35,8 +32,6 @@ namespace Game.Entity.Attack.FireBall
                 script.SetRange(range);
             }*/
 
-            direction = executor.mouseDirection.normalized;
-
             var obj = PoolManager.Instance.Get(
                 prefabFireBall,
                 executor.ownerTransform.position,
@@ -56,7 +51,18 @@ namespace Game.Entity.Attack.FireBall
 
         public override void OnExecute(Entity_AttackRunner executor)
         {
-            direction = executor.mouseDirection.normalized;
+            /*var obj = PoolManager.Instance.Get(
+                prefabFireBall,
+                executor.ownerTransform.position,
+                Quaternion.identity
+            );
+
+            //PoolManager.Instance.maxActive[obj] = maxActives;
+
+            if (obj.TryGetComponent<Projectiles_BasicScript>(out var script))
+            {
+                script.Init(direction, speed, range, timeToDelete);
+            }*/
 
             /*var obj = PoolManager.Instance.Get(
                 prefabFireBall,

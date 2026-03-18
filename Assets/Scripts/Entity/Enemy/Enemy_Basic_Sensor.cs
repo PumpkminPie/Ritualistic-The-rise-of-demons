@@ -1,17 +1,14 @@
 using UnityEngine;
-using UnityEngine.Events;
+using System;
 
 namespace Game.Entity.Enemy.StateMachine.Sensor
 {
     public class Enemy_Basic_Sensor : MonoBehaviour
     {
-        public bool canAttack = true;
-        public bool canChase = true;
-
-        public UnityEvent OnDetectPlayer;
-        public UnityEvent OnStartChasePlayer;
-        public UnityEvent OnLostPlayer;
-        //public UnityEvent OnLostPlayer;
+        public event Action OnDetectPlayer;
+        public event Action OnStartChasePlayer;
+        public event Action OnLostPlayer;
+        public event Action OnPlayerStayInAttackArea;
 
         Enemy_Basic_StateMachine stateMachine;
 
@@ -24,13 +21,20 @@ namespace Game.Entity.Enemy.StateMachine.Sensor
         {
             var _dist = (stateMachine.playerMove.transform.position - transform.position).magnitude;
 
-            if (_dist <= stateMachine.infoAsset.detectRadius)
+            foreach (var mod in stateMachine.infoAsset.attackData.attackModules)
             {
-                OnDetectPlayer?.Invoke();
-            }
-            else
-            {
-                OnLostPlayer?.Invoke();
+                if (_dist <= stateMachine.infoAsset.detectRadius)
+                {
+                    OnDetectPlayer?.Invoke();
+                }
+                else
+                {
+                    OnLostPlayer?.Invoke();
+                }
+                if (_dist <= mod.enemyPart.attackDistance)
+                {
+                    OnPlayerStayInAttackArea?.Invoke();
+                }
             }
         }
     }

@@ -25,7 +25,7 @@ namespace Game.Debug
                 Handles.EndGUI();
                 return;
             }
-            Vector2 size = GUI.skin.label.CalcSize(new GUIContent(text));
+            Vector2 size = GUI.skin.label.CalcSize(new GUIContent(text)) * 2;
             GUI.Label(new Rect(screenPos.x - (size.x / 2), -screenPos.y + view.position.height + 4, size.x, size.y), text);
             GUI.color = restoreColor;
             Handles.EndGUI();

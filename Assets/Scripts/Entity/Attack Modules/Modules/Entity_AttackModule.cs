@@ -13,6 +13,7 @@ namespace Game.Entity.Attack
         }*/
 
         protected event Action OnCollide;
+        public Vector2 direction;
 
         public virtual void OnStart(Entity_AttackRunner executor) { }
         public virtual void OnExecute(Entity_AttackRunner executor) { }

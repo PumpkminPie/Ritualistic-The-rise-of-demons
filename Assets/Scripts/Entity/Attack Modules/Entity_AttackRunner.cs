@@ -98,7 +98,7 @@ namespace Game.Entity.Attack
             playerDirection = (playerTrans.position - transform.position).normalized;
 
             var mouseWorld = mainCam.ScreenToWorldPoint(playerInput.MousePos);
-            mouseDirection = (mouseWorld - transform.position);
+            mouseDirection = (mouseWorld);
             mouseDirection.z = 0;
         }
 
@@ -125,12 +125,29 @@ namespace Game.Entity.Attack
                 state = AttackState.Execute;
                 StartCoroutine(Executer(this.attackData));
 
-                if (mod.dirType == DireType.Mouse)
-                    OnAir?.Invoke(mouseDirection);
-                else if (mod.dirType == DireType.Entity)
-                    OnAir?.Invoke(entityDirection);
-                else
-                    OnAir?.Invoke(playerDirection);
+                switch (mod.dirType)
+                {
+                    case DireType.Mouse:
+                        {
+                            mod.module.direction = (mouseDirection).normalized;
+                            break;
+                        }
+                    case DireType.Entity:
+                        {
+                            mod.module.direction = (entityDirection);
+                            break;
+                        }
+                    case DireType.ToPlayer:
+                        {
+                            mod.module.direction = (playerDirection);
+                            break;
+                        }
+                    default:
+                        {
+                            mod.module.direction = (Vector2.one);
+                            break;
+                        }
+                }
             }
 
             canAttack = false;
@@ -155,12 +172,29 @@ namespace Game.Entity.Attack
 
                     /*if (mod.changeDireOnAir)
                     {*/
-                    if (mod.dirType == DireType.Mouse)
-                        OnAir?.Invoke(mouseDirection);
-                    else if (mod.dirType == DireType.Entity)
-                        OnAir?.Invoke(entityDirection);
-                    else
-                        OnAir?.Invoke(playerDirection);
+                    switch (mod.dirType)
+                    {
+                        case DireType.Mouse:
+                            {
+                                mod.module.direction = (mouseDirection);
+                                break;
+                            }
+                        case DireType.Entity:
+                            {
+                                mod.module.direction = (entityDirection);
+                                break;
+                            }
+                        case DireType.ToPlayer:
+                            {
+                                mod.module.direction = (playerDirection);
+                                break;
+                            }
+                        default:
+                            {
+                                mod.module.direction = (Vector2.one);
+                                break;
+                            }
+                    }
                     //Debug.Log("phase 2.5");
 
                     mod.module.OnExecute(this);
