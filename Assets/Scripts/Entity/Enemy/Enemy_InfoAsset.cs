@@ -1,3 +1,4 @@
+using Game.Entity.Attack;
 using UnityEngine;
 
 namespace Game.Entity.Enemy
@@ -9,11 +10,8 @@ namespace Game.Entity.Enemy
         public float maxVel = 1;
         public float acceleration = 10;
 
-        [Header("Attack/Detecting")]
         public float detectRadius = 10;
 
-        public Vector2 meleeAttackSize;
-        public float meleeDamage = 2;
-        public float meleeAttackSpeed;
+        public Entity_AttackData attackData;
     }
 }

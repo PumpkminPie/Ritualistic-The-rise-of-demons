@@ -126,6 +126,31 @@ namespace Game.Entity.Player.Movement
                         OnPlayeStopRun?.Invoke();
                 }
 
+                
+                foreach (var vfx in vfx_groups)
+                {
+                    var dir_roll = !isRolling ? (inputHandler.Move).normalized : rollDirection;
+
+                    if (vfx.type == VFX_ConfigType.Rolling)
+                    {
+                        var _rot = vfx.objVisual.transform.localRotation;
+                        float angle = Mathf.Atan2(dir_roll.y, dir_roll.x) * Mathf.Rad2Deg;
+                        angle += 180f;
+
+                        if (dir_roll == Vector2.zero)
+                            break;
+
+                        //if (MathF.Abs(dir.x) > 1 && MathF.Abs(dir.y) > 1)
+                        vfx.objVisual.transform.localRotation = Quaternion.Euler(0, 0, angle);
+                        /*else
+                            vfx.objVisual.transform.localRotation = Quaternion.Euler(0, 0, -angle);*/
+
+                        if (isRolling)
+                        {
+                            vfx.visualEffect.Play();
+                        }
+                    }
+                }
                 Sprint();
 
                 /*if (isRolling)
@@ -164,38 +189,6 @@ namespace Game.Entity.Player.Movement
 
             //if (mouseDirection == Vector2.zero)
             rollDirection = dir;
-
-            foreach (var vfx in vfx_groups)
-            {
-                if (vfx.type == VFX_ConfigType.Rolling)
-                {
-                    var _rot = vfx.objVisual.transform.localRotation;
-                    float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
-                    angle += 180f;
-
-                    if (dir == Vector2.zero)
-                        break;
-
-                    /*if (dir.x > 0 && dir.y > 0)
-                        angle = 44;
-                    else if (dir.x < 0 && dir.y > 0)
-                        angle = 144;
-                    else if (dir.x > 0 && dir.y < 0)
-                        angle = -44;
-                    else if (dir.x < 0 && dir.y < 0)
-                        angle = -144;
-                    else
-                        angle = 0;*/
-
-                    //if (MathF.Abs(dir.x) > 1 && MathF.Abs(dir.y) > 1)
-                        vfx.objVisual.transform.localRotation = Quaternion.Euler(0, 0, angle);
-                    /*else
-                        vfx.objVisual.transform.localRotation = Quaternion.Euler(0, 0, -angle);*/
-
-
-                    vfx.visualEffect.Play();
-                }
-            }
 
             StartCoroutine(IRoll(rollDirection));
         }

@@ -22,15 +22,18 @@ namespace Game.Entity.Enemy.StateMachine.States
 
         public void Attack(Enemy_Basic_StateMachine enemy, Transform target)
         {
-            var dire = (enemy.transform.position - target.position).normalized;
-
-            RaycastHit2D[] collisions = Physics2D.CapsuleCastAll(enemy.transform.position, enemy.infoAsset.meleeAttackSize, CapsuleDirection2D.Vertical, 0, dire);
-
-            foreach (var hit in collisions)
+            foreach (var atk in enemy.infoAsset.attackData.attackModules)
             {
-                if (hit.transform.TryGetComponent<Interfaces.IHealth>(out var health))
+                var dire = (enemy.transform.position - target.position).normalized;
+
+                RaycastHit2D[] collisions = Physics2D.CapsuleCastAll(enemy.transform.position, atk.enemyPart.attackSize, CapsuleDirection2D.Vertical, 0, dire);
+
+                foreach (var hit in collisions)
                 {
-                    health.ApplyDamage(enemy.infoAsset.meleeDamage);
+                    if (hit.transform.TryGetComponent<Interfaces.IHealth>(out var health))
+                    {
+                        health.ApplyDamage(atk.damage);
+                    }
                 }
             }
         }

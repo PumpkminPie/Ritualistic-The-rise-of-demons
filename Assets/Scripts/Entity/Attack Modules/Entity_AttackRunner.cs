@@ -41,7 +41,7 @@ namespace Game.Entity.Attack
 
         public Transform ownerTransform;
 
-        public Entity_AttackData currentAttackData;
+        public Entity_AttackData attackData;
         public AttackState state;
 
         public bool canAttack = true;
@@ -53,23 +53,33 @@ namespace Game.Entity.Attack
 
         void OnEnable()
         {
-            foreach (var mod in currentAttackData.attackModules)
+            if (!attackData) return;
+
+            foreach (var mod in attackData.attackModules)
             {
-                mod.inputBind.action.performed += EnterMethod;
+                if (mod.inputBind)
+                    mod.inputBind.action.performed += EnterState;
             }
         }
         void OnDisable()
         {
-            foreach (var mod in currentAttackData.attackModules)
+            if (!attackData) return;
+
+            foreach (var mod in attackData.attackModules)
             {
-                mod.inputBind.action.performed -= EnterMethod;
+                if (mod.inputBind)
+                    mod.inputBind.action.performed -= EnterState;
             }
         }
+        void EnterState(InputAction.CallbackContext context)
+        {
+            EnterMethod();
+        }
 
-        void EnterMethod(InputAction.CallbackContext context)
+        public void EnterMethod()
         {
             if (canAttack)
-                StartCoroutine(Enter(currentAttackData));
+                StartCoroutine(Enter(attackData));
         }
 
         private void Start()
@@ -83,42 +93,13 @@ namespace Game.Entity.Attack
 
         void Update()
         {
-            if (!currentAttackData) return;
+            if (!attackData) return;
 
             playerDirection = (playerTrans.position - transform.position).normalized;
 
             var mouseWorld = mainCam.ScreenToWorldPoint(playerInput.MousePos);
             mouseDirection = (mouseWorld - transform.position);
             mouseDirection.z = 0;
-            //{ 
-            /*switch (state)
-            {*/
-            /*case AttackState.Started:
-                {
-                    StartCoroutine(Enter(currentAttackData));
-                    break;
-                }*/
-            /*case AttackState.Delay:
-                {
-                    break;
-                }*/
-            /*case AttackState.Execute:
-                {*/
-            //if (canAttack && state == AttackState.Execute)
-            //Debug.Log("execute");
-            //break;
-                //}
-            /*case AttackState.Finished:
-                {
-                    Finish(currentAttackData);
-                    break;
-                }*/
-            /*case AttackState.Idle:
-                {
-                    break;
-                }*/
-            //} 
-            //}
         }
 
         public IEnumerator Enter(Entity_AttackData attackData)
@@ -139,10 +120,10 @@ namespace Game.Entity.Attack
 
                 OnStart?.Invoke();
 
-                currentAttackData = attackData;
+                this.attackData = attackData;
                 //Debug.Log("started");
                 state = AttackState.Execute;
-                StartCoroutine(Executer(currentAttackData));
+                StartCoroutine(Executer(this.attackData));
 
                 if (mod.dirType == DireType.Mouse)
                     OnAir?.Invoke(mouseDirection);
@@ -219,32 +200,12 @@ namespace Game.Entity.Attack
         {
             OnHitEvent?.Invoke(col);
 
-            foreach (var mod in currentAttackData.attackModules)
+            foreach (var mod in attackData.attackModules)
                 mod.module.OnHit(this, col);
 
             //Debug.Log("colidiu 1");
         }
 
-        /*public GameObject CreateObjData(GameObject obj, Entity_AttackModule modul, Vector3 pos, Quaternion rot)
-        {
-            var _ob = Instantiate(obj, pos, rot);
-
-            foreach (var data in modulesData)
-            if (!data.savedData.Contains(obj) && modul == data.attackModule)
-                data.savedData.Add(_ob);
-
-            return _ob;
-        }*/
-
-        /*void OnCollisionEnter2D(Collision2D collision)
-        {
-            NotifyHit(collision.collider);
-            Debug.Log("colidiu 2");
-        }
-        void OnTriggerEnter2D(Collider2D collision)
-        {
-            NotifyHit(collision);
-            Debug.Log("colidiu 2");
-        }*/
+        public void SetAttackData(Entity_AttackData attackData) => this.attackData = attackData;
     }
 }

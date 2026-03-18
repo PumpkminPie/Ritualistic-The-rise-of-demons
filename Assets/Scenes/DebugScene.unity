@@ -434,6 +434,7 @@ GameObject:
   - component: {fileID: 925157711}
   - component: {fileID: 925157710}
   - component: {fileID: 925157709}
+  - component: {fileID: 925157712}
   - component: {fileID: 925157708}
   m_Layer: 7
   m_Name: enemy
@@ -502,6 +503,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Game.Entity.Enemy.StateMachine.Enemy_Basic_StateMachine
   infoAsset: {fileID: 11400000, guid: cbb8bbc93f44baf41bac1ed8fb780ffc, type: 2}
   playerMove: {fileID: 0}
+  attackRunner: {fileID: 925157712}
   sensor: {fileID: 925157710}
 --- !u!114 &925157710
 MonoBehaviour:
@@ -542,6 +544,27 @@ Transform:
   - {fileID: 1385430835}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &925157712
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 925157706}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4b73b7f3bc9cb9a4ba1c22f04bebfc42, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Game.Entity.Attack.Entity_AttackRunner
+  mouseDirection: {x: 0, y: 0, z: 0}
+  entityDirection: {x: 0, y: 0, z: 0}
+  playerDirection: {x: 0, y: 0, z: 0}
+  playerTrans: {fileID: 0}
+  playerInput: {fileID: 0}
+  ownerTransform: {fileID: 925157711}
+  attackData: {fileID: 0}
+  state: 0
+  canAttack: 1
 --- !u!1 &1385430834
 GameObject:
   m_ObjectHideFlags: 0
@@ -813,6 +836,10 @@ PrefabInstance:
       propertyPath: m_Sprite
       value: 
       objectReference: {fileID: 4252402210643614874, guid: a9c7926667cb8fe418a724b1656123d7, type: 3}
+    - target: {fileID: 4560375842904270303, guid: 3443795f92115ce429c29054b20c6c47, type: 3}
+      propertyPath: attackData
+      value: 
+      objectReference: {fileID: 11400000, guid: 91681ceaa03da4d49af989862f10d86f, type: 2}
     - target: {fileID: 4560375842904270303, guid: 3443795f92115ce429c29054b20c6c47, type: 3}
       propertyPath: playerInput
       value: 

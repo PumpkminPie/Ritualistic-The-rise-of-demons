@@ -11,17 +11,17 @@ namespace Game.Entity.Enemy.StateMachine.States
 
         public override void Enter(Enemy_Basic_StateMachine enemy)
         {
-            
+            enemy.attackRunner.EnterMethod();
         }
 
         public override void Execute(Enemy_Basic_StateMachine enemy)
         {
-            
+            enemy.attackRunner.Executer(enemy.attackRunner.attackData);
         }
 
         public override void Exit(Enemy_Basic_StateMachine enemy)
         {
-            
+            enemy.attackRunner.Finish(enemy.attackRunner.attackData);
         }
     }
 }
