@@ -68,11 +68,6 @@ namespace Game.Entity.Player
             //Debug.Log(playerInput.currentActionMap.name);
         }
 
-        private void OnMoveMouse(InputAction.CallbackContext context)
-        {
-            MousePos = context.ReadValue<Vector2>();
-        }
-
         void OnDisable()
         {
             moveAct.performed   -= OnMove;
@@ -85,8 +80,10 @@ namespace Game.Entity.Player
             /*rollAct.performed -= ctx => OnRoll?.Invoke(player.GetFaceDirection());
             mouseAct.performed -= ctx => MousePos = ctx.ReadValue<Vector2>();*/
         }
-
-
+        private void OnMoveMouse(InputAction.CallbackContext context)
+        {
+            MousePos = context.ReadValue<Vector2>();
+        }
         public void OnSprint(InputAction.CallbackContext context)
         {
             Sprint = !Sprint;

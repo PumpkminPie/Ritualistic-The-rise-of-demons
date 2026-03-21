@@ -5,10 +5,14 @@ namespace Game.Entity.Enemy.StateMachine.Sensor
 {
     public class Enemy_Basic_Sensor : MonoBehaviour
     {
-        public event Action OnDetectPlayer;
-        public event Action OnStartChasePlayer;
-        public event Action OnLostPlayer;
-        public event Action OnPlayerStayInAttackArea;
+        public Action OnDetectPlayer;
+        public Action OnStartChasePlayer;
+        public Action OnLostPlayer;
+        public Action OnPlayerStayInAttackArea;
+
+        [SerializeField] bool playerInAttackArea;
+
+        public bool PlayerInAttackArea => playerInAttackArea;
 
         Enemy_Basic_StateMachine stateMachine;
 
@@ -19,11 +23,14 @@ namespace Game.Entity.Enemy.StateMachine.Sensor
 
         void Update()
         {
-            var _dist = (stateMachine.playerMove.transform.position - transform.position).magnitude;
+            var playerMove = stateMachine.Player;
+            var infoAsset = stateMachine.InfoAsset;
 
-            foreach (var mod in stateMachine.infoAsset.attackData.attackModules)
+            var _dist = (playerMove.transform.position - transform.position).magnitude;
+
+            foreach (var mod in infoAsset.attackData.attackModules)
             {
-                if (_dist <= stateMachine.infoAsset.detectRadius)
+                if (_dist <= infoAsset.detectRadius)
                 {
                     OnDetectPlayer?.Invoke();
                 }
@@ -34,7 +41,10 @@ namespace Game.Entity.Enemy.StateMachine.Sensor
                 if (_dist <= mod.enemyPart.attackDistance)
                 {
                     OnPlayerStayInAttackArea?.Invoke();
+                    playerInAttackArea = true;
                 }
+                else
+                    playerInAttackArea = false;
             }
         }
     }

@@ -2,12 +2,22 @@ using Game.PoolSystem;
 using UnityEngine;
 using System.Collections;
 using Game.PoolSystem.Object;
+using System;
 
 namespace Game.Entity.Attack.FireBall
 {
     [CreateAssetMenu(menuName = "Entitys/Combat/AttackModule/Fire Ball")]
     public class Entity_AttackModule_FireBall : Entity_AttackModule
     {
+        public Entity_AttackModule_FireBall(Action<Entity_AttackModule> OnEnterLogic = null,
+            Action<Entity_AttackModule> OnExecuteLogic = null,
+            Action<Entity_AttackModule> OnExitLogic = null,
+            Action<Entity_AttackModule> OnCollideLogic = null,
+            Vector2 direction = default,
+            ExecutionPhase ExecutePhase = ExecutionPhase.Update) : base(OnEnterLogic, OnExecuteLogic, OnExitLogic, OnCollideLogic, direction, ExecutePhase)
+        {
+        }
+
         public GameObject prefabFireBall;
         public float speed = 5;
         public float timeToDelete = 5;
@@ -15,9 +25,9 @@ namespace Game.Entity.Attack.FireBall
 
         //public Entity_AttackModule_FireBall(Entity_AttackRunner executer) : base(executer){}
 
-        public override void OnStart(Entity_AttackRunner executor)
+        public override void Enter(Entity_AttackRunner runner)
         { 
-            //GameObject fireBall = null;
+            base.Enter(runner);
 
             /*direction = executor.mouseDirection.normalized;
 
@@ -34,7 +44,7 @@ namespace Game.Entity.Attack.FireBall
 
             var obj = PoolManager.Instance.Get(
                 prefabFireBall,
-                executor.ownerTransform.position,
+                runner.OwnerTransform.position,
                 Quaternion.identity
             );
 
@@ -42,48 +52,21 @@ namespace Game.Entity.Attack.FireBall
 
             if (obj.TryGetComponent<Projectiles_BasicScript>(out var script))
             {
-                script.Init(direction, speed, range, timeToDelete);
+                script.Init(direction, speed, range, timeToDelete, runner);
             }
 
             //Debug.Log(direction);
             
         }
 
-        public override void OnExecute(Entity_AttackRunner executor)
+        public override void Execute(Entity_AttackRunner runner)
         {
-            /*var obj = PoolManager.Instance.Get(
-                prefabFireBall,
-                executor.ownerTransform.position,
-                Quaternion.identity
-            );
-
-            //PoolManager.Instance.maxActive[obj] = maxActives;
-
-            if (obj.TryGetComponent<Projectiles_BasicScript>(out var script))
-            {
-                script.Init(direction, speed, range, timeToDelete);
-            }*/
-
-            /*var obj = PoolManager.Instance.Get(
-                prefabFireBall,
-                executor.ownerTransform.position,
-                Quaternion.identity
-            );*/
-
-            /*if (obj.TryGetComponent<Projectiles_BasicScript>(out var script))
-            {
-                script.Init(direction, speed, range, timeToDelete);
-            }*/
+            base.Execute(runner);
         }
 
-        public override void OnHit(Entity_AttackRunner executor, Collider2D target)
+        public override void Hit(Entity_AttackRunner runner, Collider2D target)
         {
-            
-        }
-
-        void OnEnable()
-        {
-            direction = Vector3.zero;
+            base.Hit(runner, target);
         }
     }
 }

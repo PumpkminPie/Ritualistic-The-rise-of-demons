@@ -13,6 +13,8 @@ public class Projectiles_BasicScript : MonoBehaviour
     [SerializeField] float timeToDelete;
     [SerializeField] LayerMask colLayers;
 
+    public Entity_AttackRunner owner;
+
     TrailRenderer trail;
 
     float timer;
@@ -27,7 +29,7 @@ public class Projectiles_BasicScript : MonoBehaviour
         trail = GetComponent<TrailRenderer>();
     }
 
-    private void OnEnable()
+    void OnDisable()
     {
         trail.Clear();
     }
@@ -46,63 +48,30 @@ public class Projectiles_BasicScript : MonoBehaviour
         timer -= Time.deltaTime;
 
         if (timer <= 0)
-            PoolManager.Instance.Release(gameObject);
+            HideObj();
     }
 
-    /*public void SetDirection(Vector3 direction) => this.direction = direction;
-    
-    public void SetSpeed(float speed) => this.speed = speed;
-    
-    public void SetRange(float range) => this.range = range;/*
-    
-
-    void OnTriggerEnter2D(Collider2D collision)
-    {
-        if (colLayers == (colLayers | (1 << collision.gameObject.layer)))
-        {
-            DeleteObj();
-            //OnCollisionEnter?.Invoke();
-        }
-        //Debug.Log(collision.gameObject.layer);
-    }
-
-
-    /*private void OnCollisionEnter2D(Collision2D collision)
-    {
-        if (colLayers == (colLayers | (1 << collision.gameObject.layer)))
-            DeleteObj();
-
-        //Debug.Log(collision.gameObject.layer);
-    }*/
-
-    public void DeleteObj()
+    public void HideObj()
     {
         PoolManager.Instance.Release(gameObject);
     }
-    /*public IEnumerator ILifeTimer()
-    {
-        yield return new WaitForSeconds(timeToDelete);
-        /*var obj = PoolManager.Instance.Get(
-                gameObject,
-                executor.ownerTransform.position,
-                Quaternion.identity
-            );
-    }*/
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if(colLayers == (colLayers | (1 << other.gameObject.layer)))
-            DeleteObj();
-
-        //Debug.Log("Hit: " + other.name);
+        if (colLayers == (colLayers | (1 << other.gameObject.layer)))
+        {
+            HideObj();
+            owner.NotifyHit(other);
+        }
     }
 
-    public void Init(Vector3 direction, float speed, float range, float timeToDelete)
+    public void Init(Vector3 direction, float speed, float range, float timeToDelete, Entity_AttackRunner owner)
     {
         this.direction = direction;
         this.speed = speed;
         this.range = range;
         this.timeToDelete = timeToDelete;
+        this.owner = owner;
 
         timer = timeToDelete;
     }

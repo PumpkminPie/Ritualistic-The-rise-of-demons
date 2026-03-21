@@ -26,30 +26,33 @@ namespace Game.Entity.Attack
 
     public class Entity_AttackRunner : MonoBehaviour
     {
-        public event Action<Collider2D> OnHitEvent;
-        public event Action<Vector3> OnAir;
-        public event Action OnStart;
-        public event Action OnExecute;
-        public event Action OnFinish;
+        public Action<Collider2D> OnHitEvent;
+        public Action<Vector3> OnAir;
+        public Action OnStart;
+        public Action OnExecute;
+        public Action OnFinish;
 
-        public Vector3 mouseDirection;
-        public Vector3 entityDirection;
-        public Vector3 playerDirection;
+        [SerializeField] Vector3 mouseDirection;
+        [SerializeField] Vector3 entityDirection;
+        [SerializeField] Vector3 playerDirection;
 
-        public Transform playerTrans;
-        public PlayerInputHandler playerInput;
+        [SerializeField] Transform playerTrans;
+        [SerializeField] PlayerInputHandler playerInput;
 
-        public Transform ownerTransform;
+        [SerializeField] Transform ownerTransform;
 
-        public Entity_AttackData attackData;
-        public AttackState state;
+        [SerializeField] Entity_AttackData attackData;
+        [SerializeField] AttackState state;
+        AttackModule currentAttack;
 
-        public bool canAttack = true;
-        //[SerializeField] bool isPlayer;
-        //public ModuleAttacks[] modulesData;
+        [SerializeField] bool canAttack = true;
+        [SerializeField] bool inWaitTime;
 
         Camera mainCam;
-
+        public Transform OwnerTransform => ownerTransform;
+        public bool CanAttack => canAttack;
+        public bool InWaitTime => inWaitTime;
+        public Entity_AttackData AttackData => attackData;
 
         void OnEnable()
         {
@@ -71,17 +74,6 @@ namespace Game.Entity.Attack
                     mod.inputBind.action.performed -= EnterState;
             }
         }
-        void EnterState(InputAction.CallbackContext context)
-        {
-            EnterMethod();
-        }
-
-        public void EnterMethod()
-        {
-            if (canAttack)
-                StartCoroutine(Enter(attackData));
-        }
-
         private void Start()
         {
             playerTrans = FindAnyObjectByType<Player_Movement>().transform;
@@ -89,8 +81,6 @@ namespace Game.Entity.Attack
 
             mainCam = Camera.main;
         }
-
-
         void Update()
         {
             if (!attackData) return;
@@ -98,38 +88,79 @@ namespace Game.Entity.Attack
             playerDirection = (playerTrans.position - transform.position).normalized;
 
             var mouseWorld = mainCam.ScreenToWorldPoint(playerInput.MousePos);
-            mouseDirection = (mouseWorld);
+            mouseDirection = (mouseWorld - transform.position).normalized;
             mouseDirection.z = 0;
         }
-
-        public IEnumerator Enter(Entity_AttackData attackData)
+        void EnterState(InputAction.CallbackContext context)
         {
-            if (!canAttack) yield break;
+            EnterMethod();
+        }
+        public void EnterMethod()
+        {
+            if (canAttack && !inWaitTime)
+                StartCoroutine(IEnter(currentAttack));
+        }
+        public IEnumerator IEnter(AttackModule mod)
+        {
+            if (!canAttack || inWaitTime) yield break;
 
-            //state = AttackState.Started;
+            yield return new WaitForSeconds(mod.startDelay);
 
-            foreach (var mod in attackData.attackModules)
+            OnStart?.Invoke();
+
+            switch (mod.dirType)
             {
-                //state = AttackState.Delay;
-                
-                yield return new WaitForSeconds(mod.startDelay);
+                case DireType.Mouse:
+                    {
+                        mod.module.direction = (mouseDirection);
+                        break;
+                    }
+                case DireType.Entity:
+                    {
+                        mod.module.direction = (entityDirection);
+                        break;
+                    }
+                case DireType.ToPlayer:
+                    {
+                        mod.module.direction = (playerDirection);
+                        break;
+                    }
+                default:
+                    {
+                        mod.module.direction = (entityDirection);
+                        break;
+                    }
+            }
 
-                mod.module.OnStart(this);
+            state = AttackState.Execute;
+            StartCoroutine(IExecuter(mod));
 
-                //Executer(currentAttackData);
+            mod.module.Enter(this);
 
-                OnStart?.Invoke();
+            ChangeCanAttack(false);
+        }
+        public IEnumerator IExecuter(AttackModule mod)
+        {
+            var _time = mod.duration;
 
-                this.attackData = attackData;
-                //Debug.Log("started");
-                state = AttackState.Execute;
-                StartCoroutine(Executer(this.attackData));
+            //Debug.Log(_time);
+            //Debug.Log("phase 1");
 
+            while (_time > 0)
+            {
+                _time -= Time.deltaTime;
+
+                OnExecute?.Invoke();
+
+                //Debug.Log("phase 2");
+
+                /*if (mod.changeDireOnAir)
+                {*/
                 switch (mod.dirType)
                 {
                     case DireType.Mouse:
                         {
-                            mod.module.direction = (mouseDirection).normalized;
+                            mod.module.direction = (mouseDirection);
                             break;
                         }
                     case DireType.Entity:
@@ -144,102 +175,62 @@ namespace Game.Entity.Attack
                         }
                     default:
                         {
-                            mod.module.direction = (Vector2.one);
+                            mod.module.direction = (entityDirection);
                             break;
                         }
                 }
+                //Debug.Log("phase 2.5");
+
+                mod.module.Execute(this);
+                //}
+
+                yield return null; 
             }
 
-            canAttack = false;
+            yield return new WaitForSeconds(mod.endDelay);
+
+            Finish(mod);
+            state = AttackState.Finished;
         }
-
-        public IEnumerator Executer(Entity_AttackData attackData)
+        public void Finish(AttackModule mod)
         {
-            foreach (var mod in attackData.attackModules)
-            {
-                var _time = mod.duration;
-
-                //Debug.Log(_time);
-                //Debug.Log("phase 1");
-
-                while (_time > 0)
-                {
-                    _time -= Time.deltaTime;
-
-                    OnExecute?.Invoke();
-
-                    //Debug.Log("phase 2");
-
-                    /*if (mod.changeDireOnAir)
-                    {*/
-                    switch (mod.dirType)
-                    {
-                        case DireType.Mouse:
-                            {
-                                mod.module.direction = (mouseDirection);
-                                break;
-                            }
-                        case DireType.Entity:
-                            {
-                                mod.module.direction = (entityDirection);
-                                break;
-                            }
-                        case DireType.ToPlayer:
-                            {
-                                mod.module.direction = (playerDirection);
-                                break;
-                            }
-                        default:
-                            {
-                                mod.module.direction = (Vector2.one);
-                                break;
-                            }
-                    }
-                    //Debug.Log("phase 2.5");
-
-                    mod.module.OnExecute(this);
-                    //}
-
-                    yield return null; 
-                }
-
-                //Debug.Log("executor");
-
-                //Debug.Log("phase 3");
-
-                yield return new WaitForSeconds(mod.endDelay);
-
-                //Debug.Log("phase 4");
-                Finish(attackData);
-                state = AttackState.Finished;
-            }
-        }
-        public void Finish(Entity_AttackData attackData)
-        {
-            /*foreach (var mod in attackData.attackModules)
-                mod.module.O*/
-
             OnFinish?.Invoke();
 
-            foreach (var mod in attackData.attackModules)
-            {
-                mod.module.OnFinish(this);
-            }
-            canAttack = true;
+            mod.module.Exit(this);
+
+            ChangeCanAttack(true);
             state = AttackState.Idle;
         }
-
-
         public void NotifyHit(Collider2D col)
         {
             OnHitEvent?.Invoke(col);
 
             foreach (var mod in attackData.attackModules)
-                mod.module.OnHit(this, col);
-
-            //Debug.Log("colidiu 1");
+                mod.module.Hit(this, col);
         }
 
         public void SetAttackData(Entity_AttackData attackData) => this.attackData = attackData;
+
+        public void ChangeCanAttack(bool value) => canAttack = value;
+        public void ChangeEntityDirection(Vector3 value) => entityDirection = value;
+        public void ChangeInWaitTime(bool value) => inWaitTime = value;
+        public IEnumerator IAwaitTimer(float time)
+        {
+            if (time is 0)
+            {
+                UnityEngine.Debug.Log("no time left"); 
+                yield break;
+            }
+
+            UnityEngine.Debug.Log("wait time");
+
+            inWaitTime = false;
+
+            yield return new WaitForSeconds(time);
+
+            UnityEngine.Debug.Log("end wait time");
+            inWaitTime = true;
+        }
+        public void ChangeCurrentAttack(AttackModule mod) => currentAttack = mod;
     }
 }

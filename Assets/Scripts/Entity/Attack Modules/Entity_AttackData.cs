@@ -20,7 +20,7 @@ namespace Game.Entity.Attack
     }
 
     [Serializable]
-    public struct AttackModules
+    public struct AttackModule
     {
         [HideInInspector]
         public string inspectorName;
@@ -38,6 +38,7 @@ namespace Game.Entity.Attack
         public float startDelay;
         public float duration;
         public float endDelay;
+        public float waitTimeAfterAttack;
 
         [Header("Others")]
         [Tooltip("If 'Mouse' => go to mouse dire.\nIf 'Entity' => go to face dire.\nIf 'ToPlayer' => go to player pos.")]
@@ -52,7 +53,7 @@ namespace Game.Entity.Attack
     [CreateAssetMenu(menuName = "Entitys/Combat/AttackData")]
     public class Entity_AttackData : ScriptableObject
     {
-        public List<AttackModules> attackModules;
+        public List<AttackModule> attackModules;
 
 #if UNITY_EDITOR
 

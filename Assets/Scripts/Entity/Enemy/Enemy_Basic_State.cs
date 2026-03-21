@@ -1,41 +1,55 @@
 using Game.Entity.Health;
-using Unity.IntegerTime;
+using System;
 using UnityEngine;
 
+public enum ExecutionPhase
+{
+    Update,
+    FixedUpdate,
+    LateUpdate
+}
 namespace Game.Entity.Enemy.StateMachine.States
 {
     public abstract class Enemy_Basic_States
     {
-        protected Enemy_Basic_StateMachine enemy;
-        protected Enemy_Basic_States(Enemy_Basic_StateMachine enemy) { }
+        protected readonly Enemy_Basic_StateMachine main_enemy;
 
-        public abstract void Enter(Enemy_Basic_StateMachine enemy);
-        public abstract void Execute(Enemy_Basic_StateMachine enemy);
-        public abstract void Exit(Enemy_Basic_StateMachine enemy);
+        protected readonly Action<Enemy_Basic_States> OnEnterLogic;
+        protected readonly Action<Enemy_Basic_States> OnExecuteLogic;
+        protected readonly Action<Enemy_Basic_States> OnExitLogic;
 
-        public void GoTo(Enemy_Basic_StateMachine enemy, Transform target, float vel) 
+        protected readonly Func<Enemy_Basic_States, bool> CanExit;
+
+        public readonly ExecutionPhase ExecutePhase;
+
+        public Enemy_Basic_States(Enemy_Basic_StateMachine main_enemy,
+            Action<Enemy_Basic_States> OnEnterLogic = null,
+            Action<Enemy_Basic_States> OnExecuteLogic = null,
+            Action<Enemy_Basic_States> OnExitLogic = null,
+            Func<Enemy_Basic_States, bool> CanExit = null,
+            ExecutionPhase ExecutePhase = ExecutionPhase.Update
+            )
         {
-            Vector2 velocity = Vector2.one, currentVel = Vector2.one;
-
-            enemy.transform.position = Vector2.Lerp(enemy.transform.position, target.position, vel * Time.deltaTime);
+            this.main_enemy = main_enemy;
+            this.OnEnterLogic = OnEnterLogic;
+            this.OnExecuteLogic = OnExecuteLogic;
+            this.OnExitLogic = OnExitLogic;
+            this.CanExit = CanExit ?? (_ => true);
+            this.ExecutePhase = ExecutePhase;
         }
 
-        public void Attack(Enemy_Basic_StateMachine enemy, Transform target)
+        public virtual void Enter()
         {
-            foreach (var atk in enemy.infoAsset.attackData.attackModules)
-            {
-                var dire = (enemy.transform.position - target.position).normalized;
-
-                RaycastHit2D[] collisions = Physics2D.CapsuleCastAll(enemy.transform.position, atk.enemyPart.attackSize, CapsuleDirection2D.Vertical, 0, dire);
-
-                foreach (var hit in collisions)
-                {
-                    if (hit.transform.TryGetComponent<Interfaces.IHealth>(out var health))
-                    {
-                        health.ApplyDamage(atk.damage);
-                    }
-                }
-            }
+            OnEnterLogic?.Invoke(this);
+        }
+        public virtual void Execute()
+        {
+            OnExecuteLogic?.Invoke(this);
+        }
+        public virtual void Exit()
+        {
+            if (CanExit(this))
+                OnExitLogic?.Invoke(this);
         }
     }
 }

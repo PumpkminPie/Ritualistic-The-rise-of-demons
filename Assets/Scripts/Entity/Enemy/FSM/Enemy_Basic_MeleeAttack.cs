@@ -1,5 +1,6 @@
 using Game.Entity.Enemy.StateMachine;
 using Game.Entity.Enemy.StateMachine.States;
+using System;
 using UnityEngine;
 
 namespace Game.Entity.Enemy.StateMachine.States
@@ -7,27 +8,41 @@ namespace Game.Entity.Enemy.StateMachine.States
 
     public class Enemy_Basic_MeleeAttack : Enemy_Basic_States
     {
-        public Enemy_Basic_MeleeAttack(Enemy_Basic_StateMachine enemy) : base(enemy) {}
-
-        public override void Enter(Enemy_Basic_StateMachine enemy)
+        public Enemy_Basic_MeleeAttack(Enemy_Basic_StateMachine main_enemy,
+            Action<Enemy_Basic_States> OnEnterLogic = null,
+            Action<Enemy_Basic_States> OnExecuteLogic = null,
+            Action<Enemy_Basic_States> OnExitLogic = null,
+            Func<Enemy_Basic_States, bool> CanExit = null,
+            ExecutionPhase ExecutePhase = ExecutionPhase.Update) : base(main_enemy, OnEnterLogic, OnExecuteLogic, OnExitLogic, CanExit, ExecutePhase)
         {
-            if (!enemy.attackRunner.canAttack) 
+        }
+
+        public override void Enter()
+        {
+            base.Enter();
+
+            if (main_enemy.AttackRunner.CanAttack is false) 
             {
-                Execute(enemy); 
                 return; 
             }
 
-            enemy.attackRunner.EnterMethod();
+            main_enemy.AttackRunner.EnterMethod();
+            main_enemy.AttackRunner.ChangeCanAttack(false);
         }
 
-        public override void Execute(Enemy_Basic_StateMachine enemy)
+        public override void Execute()
         {
-            enemy.attackRunner.Executer(enemy.attackRunner.attackData);
+            base.Execute();
         }
 
-        public override void Exit(Enemy_Basic_StateMachine enemy)
+        public override void Exit()
         {
-            enemy.attackRunner.Finish(enemy.attackRunner.attackData);
+            base.Exit();
+
+            foreach (var mod in main_enemy.AttackRunner.AttackData.attackModules)
+            {
+                main_enemy.AttackRunner.IAwaitTimer(mod.waitTimeAfterAttack);
+            }
         }
     }
 }

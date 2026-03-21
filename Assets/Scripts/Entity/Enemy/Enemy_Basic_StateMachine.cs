@@ -11,20 +11,24 @@ namespace Game.Entity.Enemy.StateMachine
 {
     public class Enemy_Basic_StateMachine : MonoBehaviour
     {
-        public Enemy_Basic_States currentState;
+        Enemy_Basic_States currentState;
 
-        public Enemy_InfoAsset infoAsset;
+        [SerializeField] Enemy_InfoAsset infoAsset;
 
-        public Enemy_Basic_States idleState;
-        public Enemy_Basic_States chaseState;
-        public Enemy_Basic_States attackState;
+        Enemy_Basic_States idleState;
+        Enemy_Basic_States chaseState;
+        Enemy_Basic_States attackState;
 
-        public Player_Movement playerMove;
-        public Entity_AttackRunner attackRunner;
-        public Enemy_Basic_Sensor sensor;
+        [SerializeField] Player_Movement playerMove;
+        [SerializeField] Entity_AttackRunner attackRunner;
+        [SerializeField] Enemy_Basic_Sensor sensor;
 
-        public bool canChase = true;
-
+        [SerializeField] bool canChase = true;
+        public Enemy_InfoAsset InfoAsset => infoAsset;
+        public Player_Movement Player => playerMove;
+        public Entity_AttackRunner AttackRunner => attackRunner;
+        public Enemy_Basic_Sensor Sensor => sensor;
+        public bool CanChase => canChase;
 
         void Awake()
         {
@@ -46,7 +50,7 @@ namespace Game.Entity.Enemy.StateMachine
             if (canChase)
                 sensor.OnDetectPlayer += (() => ChangeState(chaseState));
 
-            if (attackRunner.canAttack)
+            if ((attackRunner.CanAttack && !attackRunner.InWaitTime))
                 sensor.OnPlayerStayInAttackArea += (() => ChangeState(attackState));
 
             sensor.OnLostPlayer += (() => ChangeState(idleState));
@@ -58,21 +62,25 @@ namespace Game.Entity.Enemy.StateMachine
             sensor.OnLostPlayer -= (() => ChangeState(idleState));
 
             sensor.OnPlayerStayInAttackArea -= (() => ChangeState(attackState));
+
+            if (attackRunner.InWaitTime && currentState != idleState)
+                ChangeState(idleState);
         }
 
         void Update()
         {
-            currentState.Execute(this);
+            currentState.Execute();
         }
 
         public void ChangeState(Enemy_Basic_States state)
         {
             if (currentState == state) return;
             
-            currentState.Exit(this);
+            currentState.Exit();
             currentState = state;
-            currentState.Enter(this);
+            currentState.Enter();
         }
+
 
         private void OnDrawGizmos()
         {
