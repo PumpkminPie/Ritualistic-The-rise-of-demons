@@ -17,13 +17,6 @@ namespace Game.Entity.Attack
         Finished
     }
 
-    [Serializable]
-    public struct ModuleAttacks
-    {
-        public Entity_AttackModule attackModule;
-        public List<GameObject> savedData;
-    }
-
     public class Entity_AttackRunner : MonoBehaviour
     {
         public Action<Collider2D> OnHitEvent;
@@ -43,7 +36,7 @@ namespace Game.Entity.Attack
 
         [SerializeField] Entity_AttackData attackData;
         [SerializeField] AttackState state;
-        AttackModule currentAttack;
+        [SerializeField] AttackModule currentAttack;
 
         [SerializeField] bool canAttack = true;
         [SerializeField] bool inWaitTime;
@@ -58,23 +51,15 @@ namespace Game.Entity.Attack
         {
             if (!attackData) return;
 
-            foreach (var mod in attackData.attackModules)
-            {
-                if (mod.inputBind)
-                    mod.inputBind.action.performed += EnterState;
-            }
+            currentAttack = attackData.attackModules[0];
+
+            currentAttack.inputBind.action.performed += EnterState;
         }
         void OnDisable()
         {
-            if (!attackData) return;
-
-            foreach (var mod in attackData.attackModules)
-            {
-                if (mod.inputBind)
-                    mod.inputBind.action.performed -= EnterState;
-            }
+            currentAttack.inputBind.action.performed -= EnterState;
         }
-        private void Start()
+        void Start()
         {
             playerTrans = FindAnyObjectByType<Player_Movement>().transform;
             playerInput = playerTrans.GetComponent<PlayerInputHandler>();
@@ -143,19 +128,12 @@ namespace Game.Entity.Attack
         {
             var _time = mod.duration;
 
-            //Debug.Log(_time);
-            //Debug.Log("phase 1");
-
             while (_time > 0)
             {
                 _time -= Time.deltaTime;
 
                 OnExecute?.Invoke();
 
-                //Debug.Log("phase 2");
-
-                /*if (mod.changeDireOnAir)
-                {*/
                 switch (mod.dirType)
                 {
                     case DireType.Mouse:
@@ -179,10 +157,8 @@ namespace Game.Entity.Attack
                             break;
                         }
                 }
-                //Debug.Log("phase 2.5");
 
                 mod.module.Execute(this);
-                //}
 
                 yield return null; 
             }
