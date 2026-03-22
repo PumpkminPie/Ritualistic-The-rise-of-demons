@@ -27,7 +27,7 @@ namespace Game.Entity.Enemy.StateMachine.States
             }
 
             main_enemy.AttackRunner.EnterMethod();
-            main_enemy.AttackRunner.ChangeCanAttack(false);
+            main_enemy.AttackRunner.SetCanAttack(false);
         }
 
         public override void Execute()

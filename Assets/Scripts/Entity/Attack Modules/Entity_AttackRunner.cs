@@ -122,7 +122,7 @@ namespace Game.Entity.Attack
 
             mod.module.Enter(this);
 
-            ChangeCanAttack(false);
+            SetCanAttack(false);
         }
         public IEnumerator IExecuter(AttackModule mod)
         {
@@ -174,7 +174,7 @@ namespace Game.Entity.Attack
 
             mod.module.Exit(this);
 
-            ChangeCanAttack(true);
+            SetCanAttack(true);
             state = AttackState.Idle;
         }
         public void NotifyHit(Collider2D col)
@@ -186,10 +186,10 @@ namespace Game.Entity.Attack
         }
 
         public void SetAttackData(Entity_AttackData attackData) => this.attackData = attackData;
-
-        public void ChangeCanAttack(bool value) => canAttack = value;
-        public void ChangeEntityDirection(Vector3 value) => entityDirection = value;
-        public void ChangeInWaitTime(bool value) => inWaitTime = value;
+        public void SetCanAttack(bool value) => canAttack = value;
+        public void SetEntityDirection(Vector3 value) => entityDirection = value;
+        public void SetInWaitTime(bool value) => inWaitTime = value;
+        public void SetCurrentAttack(AttackModule mod) => currentAttack = mod;
         public IEnumerator IAwaitTimer(float time)
         {
             if (time is 0)
@@ -207,6 +207,5 @@ namespace Game.Entity.Attack
             UnityEngine.Debug.Log("end wait time");
             inWaitTime = true;
         }
-        public void ChangeCurrentAttack(AttackModule mod) => currentAttack = mod;
     }
 }

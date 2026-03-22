@@ -53,7 +53,7 @@ namespace Game.Entity.Enemy.StateMachine
             if ((attackRunner.CanAttack && !attackRunner.InWaitTime))
                 sensor.OnPlayerStayInAttackArea += (() => ChangeState(attackState));
 
-            attackRunner.ChangeCurrentAttack(infoAsset.attackData.attackModules[0]);
+            attackRunner.SetCurrentAttack(infoAsset.attackData.attackModules[0]);
             sensor.OnLostPlayer += (() => ChangeState(idleState));
         }
 
@@ -81,7 +81,6 @@ namespace Game.Entity.Enemy.StateMachine
             currentState = state;
             currentState.Enter();
         }
-
 
         private void OnDrawGizmos()
         {
