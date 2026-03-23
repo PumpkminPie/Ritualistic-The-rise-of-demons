@@ -38,7 +38,8 @@ namespace Game.Entity.Attack
         public float startDelay;
         public float duration;
         public float endDelay;
-        public float waitTimeAfterAttack;
+        [Tooltip("Optional!!!!")]
+        public float awaitTimeAfterAttack;
 
         [Header("Others")]
         [Tooltip("If 'Mouse' => go to mouse dire.\nIf 'Entity' => go to face dire.\nIf 'ToPlayer' => go to player pos.")]

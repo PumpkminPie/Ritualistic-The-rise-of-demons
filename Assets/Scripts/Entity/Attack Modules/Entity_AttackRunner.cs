@@ -36,7 +36,7 @@ namespace Game.Entity.Attack
 
         [SerializeField] Entity_AttackData attackData;
         [SerializeField] AttackState state;
-        [SerializeField] AttackModule currentAttack;
+        AttackModule currentAttack;
 
         [SerializeField] bool canAttack = true;
         [SerializeField] bool inWaitTime;
@@ -46,6 +46,7 @@ namespace Game.Entity.Attack
         public bool CanAttack => canAttack;
         public bool InWaitTime => inWaitTime;
         public Entity_AttackData AttackData => attackData;
+        public AttackModule CurrentAttack => currentAttack;
 
         void OnEnable()
         {
@@ -57,6 +58,8 @@ namespace Game.Entity.Attack
         }
         void OnDisable()
         {
+            if (!attackData || !Equals(currentAttack)) return;
+
             currentAttack.inputBind.action.performed -= EnterState;
         }
         void Start()
@@ -190,7 +193,7 @@ namespace Game.Entity.Attack
         public void SetEntityDirection(Vector3 value) => entityDirection = value;
         public void SetInWaitTime(bool value) => inWaitTime = value;
         public void SetCurrentAttack(AttackModule mod) => currentAttack = mod;
-        public IEnumerator IAwaitTimer(float time)
+        /*public IEnumerator IAwaitTimer(float time)
         {
             if (time is 0)
             {
@@ -206,6 +209,6 @@ namespace Game.Entity.Attack
 
             UnityEngine.Debug.Log("end wait time");
             inWaitTime = true;
-        }
+        }*/
     }
 }

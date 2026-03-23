@@ -11,8 +11,12 @@ namespace Game.Entity.Enemy.StateMachine.Sensor
         public Action OnPlayerStayInAttackArea;
 
         [SerializeField] bool playerInAttackArea;
+        [SerializeField] bool playerInDetectArea;
+        [SerializeField] bool canChase;
 
         public bool PlayerInAttackArea => playerInAttackArea;
+        public bool PlayerInDetectArea => playerInDetectArea;
+        public bool CanChase => canChase;
 
         Enemy_Basic_StateMachine stateMachine;
 
@@ -32,12 +36,17 @@ namespace Game.Entity.Enemy.StateMachine.Sensor
             {
                 if (_dist <= infoAsset.detectRadius)
                 {
-                    OnDetectPlayer?.Invoke();
+                    if (canChase)
+                        OnDetectPlayer?.Invoke();
+
+                    playerInDetectArea = true;
                 }
                 else
                 {
                     OnLostPlayer?.Invoke();
+                    playerInDetectArea = false;
                 }
+
                 if (_dist <= mod.enemyPart.attackDistance)
                 {
                     OnPlayerStayInAttackArea?.Invoke();
@@ -47,5 +56,7 @@ namespace Game.Entity.Enemy.StateMachine.Sensor
                     playerInAttackArea = false;
             }
         }
+
+        public void SetCanChase(bool value) => canChase = value;
     }
 }

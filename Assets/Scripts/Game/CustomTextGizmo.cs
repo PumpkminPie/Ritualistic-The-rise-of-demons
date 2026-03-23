@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEditor;
 
 #if UNITY_EDITOR
-namespace Game.Debug
+namespace Game.ScreenDebugs
 {
     public class CustomTextGizmo : MonoBehaviour
     {

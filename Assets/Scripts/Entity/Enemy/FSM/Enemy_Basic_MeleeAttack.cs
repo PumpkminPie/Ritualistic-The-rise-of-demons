@@ -39,10 +39,10 @@ namespace Game.Entity.Enemy.StateMachine.States
         {
             base.Exit();
 
-            foreach (var mod in main_enemy.AttackRunner.AttackData.attackModules)
+            /*foreach (var mod in main_enemy.AttackRunner.AttackData.attackModules)
             {
-                main_enemy.AttackRunner.IAwaitTimer(mod.waitTimeAfterAttack);
-            }
+                main_enemy.AttackRunner.SetInWaitTime(true);
+            }*/
         }
     }
 }

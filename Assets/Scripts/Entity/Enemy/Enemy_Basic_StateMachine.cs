@@ -2,10 +2,11 @@ using Game.Entity.Attack;
 using Game.Entity.Enemy.StateMachine.Sensor;
 using Game.Entity.Enemy.StateMachine.States;
 using Game.Entity.Player.Movement;
-using Game.Debug;
+using Game.ScreenDebugs;
 using UnityEditor;
 using UnityEngine;
 using System.Collections;
+using UnityEditor.UIElements;
 
 namespace Game.Entity.Enemy.StateMachine
 {
@@ -22,13 +23,10 @@ namespace Game.Entity.Enemy.StateMachine
         [SerializeField] Player_Movement playerMove;
         [SerializeField] Entity_AttackRunner attackRunner;
         [SerializeField] Enemy_Basic_Sensor sensor;
-
-        [SerializeField] bool canChase = true;
         public Enemy_InfoAsset InfoAsset => infoAsset;
         public Player_Movement Player => playerMove;
         public Entity_AttackRunner AttackRunner => attackRunner;
         public Enemy_Basic_Sensor Sensor => sensor;
-        public bool CanChase => canChase;
 
         void Awake()
         {
@@ -47,30 +45,48 @@ namespace Game.Entity.Enemy.StateMachine
 
             attackRunner.SetAttackData(infoAsset.attackData);
 
-            if (canChase)
-                sensor.OnDetectPlayer += (() => ChangeState(chaseState));
-
-            if ((attackRunner.CanAttack && !attackRunner.InWaitTime))
-                sensor.OnPlayerStayInAttackArea += (() => ChangeState(attackState));
+            sensor.OnDetectPlayer += (() => ChangeState(chaseState));
+            sensor.OnLostPlayer += (() => ChangeState(idleState));
 
             attackRunner.SetCurrentAttack(infoAsset.attackData.attackModules[0]);
-            sensor.OnLostPlayer += (() => ChangeState(idleState));
         }
 
         private void OnDisable()
         {
             sensor.OnDetectPlayer -= (() => ChangeState(chaseState));
             sensor.OnLostPlayer -= (() => ChangeState(idleState));
-
-            sensor.OnPlayerStayInAttackArea -= (() => ChangeState(attackState));
-
-            if (attackRunner.InWaitTime && currentState != idleState)
-                ChangeState(idleState);
         }
 
         void Update()
         {
             currentState.Execute();
+
+            if (attackRunner.CanAttack && !attackRunner.InWaitTime && sensor.PlayerInAttackArea)
+                StartCoroutine(IAttackState());
+        }
+
+        IEnumerator IAttackState()
+        {
+            ChangeState(attackState);
+
+            yield return new WaitForSeconds(1f);
+
+            var _timer = (attackRunner.CurrentAttack.awaitTimeAfterAttack);
+
+            while (_timer > 0)
+            {
+                _timer -= Time.deltaTime;
+
+                attackRunner.SetInWaitTime(true);
+                sensor.SetCanChase(true);
+
+                yield return null;
+            }
+
+            sensor.SetCanChase(false);
+            attackRunner.SetInWaitTime(false);
+
+            ChangeState(idleState);
         }
 
         public void ChangeState(Enemy_Basic_States state)

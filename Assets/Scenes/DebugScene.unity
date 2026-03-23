@@ -517,17 +517,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 14db3484868775d4183f1ad1fba77328, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Game.Entity.Enemy.StateMachine.Sensor.Enemy_Basic_Sensor
-  canAttack: 1
-  canChase: 1
-  OnDetectPlayer:
-    m_PersistentCalls:
-      m_Calls: []
-  OnStartChasePlayer:
-    m_PersistentCalls:
-      m_Calls: []
-  OnLostPlayer:
-    m_PersistentCalls:
-      m_Calls: []
+  playerInAttackArea: 0
+  playerInDetectArea: 0
+  canChase: 0
 --- !u!4 &925157711
 Transform:
   m_ObjectHideFlags: 0
@@ -565,6 +557,7 @@ MonoBehaviour:
   attackData: {fileID: 0}
   state: 0
   canAttack: 1
+  inWaitTime: 0
 --- !u!1 &1385430834
 GameObject:
   m_ObjectHideFlags: 0
