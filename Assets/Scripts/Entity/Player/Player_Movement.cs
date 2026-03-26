@@ -61,7 +61,7 @@ namespace Game.Entity.Player.Movement
         public event Action OnPlayerStopRoll;
 
         Rigidbody2D rb;
-        PlayerInputHandler inputHandler;
+        Player_InputHandler inputHandler;
         PlayerInput playerInput;
         //Transform ogPlayerTransform { get { return transform; } set { ogPlayerTransform = value; } }
         [SerializeField] Animator animator;
@@ -69,7 +69,7 @@ namespace Game.Entity.Player.Movement
         void Start()
         {
             rb = GetComponent<Rigidbody2D>();
-            inputHandler = GetComponent<PlayerInputHandler>();
+            inputHandler = GetComponent<Player_InputHandler>();
             //animator = GetComponent<Animator>();
             playerInput = GetComponent<PlayerInput>();
 

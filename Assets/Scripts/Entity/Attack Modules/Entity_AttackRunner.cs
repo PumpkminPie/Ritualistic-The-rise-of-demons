@@ -30,7 +30,7 @@ namespace Game.Entity.Attack
         [SerializeField] Vector3 playerDirection;
 
         [SerializeField] Transform playerTrans;
-        [SerializeField] PlayerInputHandler playerInput;
+        [SerializeField] Player_InputHandler playerInput;
 
         [SerializeField] Transform ownerTransform;
 
@@ -65,7 +65,7 @@ namespace Game.Entity.Attack
         void Start()
         {
             playerTrans = FindAnyObjectByType<Player_Movement>().transform;
-            playerInput = playerTrans.GetComponent<PlayerInputHandler>();
+            playerInput = playerTrans.GetComponent<Player_InputHandler>();
 
             mainCam = Camera.main;
         }

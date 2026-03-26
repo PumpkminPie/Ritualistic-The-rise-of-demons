@@ -7,7 +7,7 @@ using Game.Entity.Player.Movement;
 
 namespace Game.Entity.Player
 {
-    public class PlayerInputHandler : MonoBehaviour
+    public class Player_InputHandler : MonoBehaviour
     {
         public Vector2 Move { get; private set; }
         public Vector2 MousePos { get; private set; }
