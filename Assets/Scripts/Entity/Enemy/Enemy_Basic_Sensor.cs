@@ -1,5 +1,6 @@
 using UnityEngine;
 using System;
+using Game.Manegement;
 
 namespace Game.Entity.Enemy.StateMachine.Sensor
 {
@@ -27,7 +28,7 @@ namespace Game.Entity.Enemy.StateMachine.Sensor
 
         void Update()
         {
-            var playerMove = stateMachine.Player;
+            var playerMove = GameController.Instance.playerTrans;
             var infoAsset = stateMachine.InfoAsset;
 
             var _dist = (playerMove.transform.position - transform.position).magnitude;

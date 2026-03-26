@@ -1,5 +1,6 @@
 using Game.Entity.Player;
 using Game.Entity.Player.Movement;
+using Game.Manegement;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -28,9 +29,6 @@ namespace Game.Entity.Attack
         [SerializeField] Vector3 mouseDirection;
         [SerializeField] Vector3 entityDirection;
         [SerializeField] Vector3 playerDirection;
-
-        [SerializeField] Transform playerTrans;
-        [SerializeField] Player_InputHandler playerInput;
 
         [SerializeField] Transform ownerTransform;
 
@@ -64,20 +62,14 @@ namespace Game.Entity.Attack
         }
         void Start()
         {
-            playerTrans = FindAnyObjectByType<Player_Movement>().transform;
-            playerInput = playerTrans.GetComponent<Player_InputHandler>();
-
             mainCam = Camera.main;
         }
         void Update()
         {
             if (!attackData) return;
 
-            playerDirection = (playerTrans.position - transform.position).normalized;
-
-            var mouseWorld = mainCam.ScreenToWorldPoint(playerInput.MousePos);
-            mouseDirection = (mouseWorld - transform.position).normalized;
-            mouseDirection.z = 0;
+            playerDirection = (GameController.Instance.playerTrans.position - transform.position).normalized;
+            mouseDirection = GameController.GetMousePos(transform.position);
         }
         void EnterState(InputAction.CallbackContext context)
         {

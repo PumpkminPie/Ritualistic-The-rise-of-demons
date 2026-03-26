@@ -20,11 +20,9 @@ namespace Game.Entity.Enemy.StateMachine
         Enemy_Basic_States chaseState;
         Enemy_Basic_States attackState;
 
-        [SerializeField] Player_Movement playerMove;
         [SerializeField] Entity_AttackRunner attackRunner;
         [SerializeField] Enemy_Basic_Sensor sensor;
         public Enemy_InfoAsset InfoAsset => infoAsset;
-        public Player_Movement Player => playerMove;
         public Entity_AttackRunner AttackRunner => attackRunner;
         public Enemy_Basic_Sensor Sensor => sensor;
 
@@ -38,8 +36,6 @@ namespace Game.Entity.Enemy.StateMachine
         }
         void Start()
         {
-            playerMove = FindAnyObjectByType<Player_Movement>();
-
             sensor = GetComponent<Enemy_Basic_Sensor>();
             attackRunner = GetComponent<Entity_AttackRunner>();
 
